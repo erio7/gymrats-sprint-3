@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
-import { AlertCircle, Clock, Loader2, Route, Trophy, Users } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { AlertCircle, BarChart3, Clock, Loader2, Medal, Route, Sparkles, Trophy, Users } from 'lucide-react';
 import TD_LOGO_URL from './tdbusiness_logo.jpg';
 import { CHALLENGE_END, CHALLENGE_START, CSV_URL, FEED_CSV_URL, REFRESH_INTERVAL_MS } from './config';
 import { IndividualPanel } from './components/IndividualPanel';
+import { InsightsPanel } from './components/InsightsPanel';
 import { ChallengeCountdown } from './components/ChallengeCountdown';
 import { MediaFeed } from './components/MediaFeed';
 import { StatCard } from './components/StatCard';
@@ -13,6 +14,7 @@ export default function App() {
   const { data, feedData, loading, error } = useGoogleSheetsData({ rankingUrl: CSV_URL, feedUrl: FEED_CSV_URL, refreshIntervalMs: REFRESH_INTERVAL_MS });
   const { rankingData, totalKm, totalMembers, lastUpdate } = useMemo(() => computeRanking(data), [data]);
   const totalPoints = rankingData.reduce((sum, member) => sum + member.points, 0);
+  const [page, setPage] = useState('ranking');
 
   if (loading) return <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center"><div className="flex flex-col items-center gap-4"><Loader2 className="w-10 h-10 animate-spin text-blue-600" /><p className="text-gray-500 font-medium tracking-widest uppercase">Carregando Gym Rats...</p></div></div>;
   if (error) return <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-6"><div className="bg-[#12121a] p-8 rounded-2xl shadow-xl border border-red-900/30 max-w-md w-full text-center"><AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" /><h2 className="text-xl font-bold text-white mb-2">Erro de Conexão</h2><p className="text-gray-400 mb-6">{error}</p><button onClick={() => window.location.reload()} className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold">Tentar novamente</button></div></div>;
@@ -24,6 +26,6 @@ export default function App() {
       <div className="flex items-stretch justify-center gap-2 sm:gap-3 pb-0.5 w-full sm:w-auto"><div className="hidden md:flex items-stretch gap-2"><StatCard icon={Route} color="text-green-500" value={totalKm} label="Km Percorridos" /><StatCard icon={Trophy} color="text-blue-500" value={totalPoints} label="Total de Pontos" /></div><ChallengeCountdown startDate={CHALLENGE_START} endDate={CHALLENGE_END} /></div>
     </div></header>
     <MediaFeed feedData={feedData} />
-    <main className="relative z-10 flex-1 overflow-y-auto md:overflow-hidden w-full flex justify-center"><div className="w-full max-w-[1600px] px-2 sm:px-6 lg:px-12 pt-4 sm:pt-6 pb-4 md:pb-0 md:h-full flex flex-col md:h-full">{rankingData.length ? <IndividualPanel rankingData={rankingData} /> : <div className="text-gray-500 w-full text-center py-20">Sem dados suficientes para listar competidores.</div>}</div></main>
+    <main className="relative z-10 flex-1 overflow-y-auto w-full flex justify-center"><div className="w-full max-w-[1600px] px-2 sm:px-6 lg:px-12 pt-4 sm:pt-6 pb-6 flex flex-col gap-4"><nav className="flex gap-2 overflow-x-auto pb-1">{[["ranking", Medal, "Ranking geral"], ["evolution", BarChart3, "Evolução"], ["highlights", Sparkles, "Destaques"]].map(([id, Icon, label]) => <button key={id} onClick={() => setPage(id)} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider whitespace-nowrap transition-colors ${page === id ? 'bg-blue-600 text-white' : 'bg-white/[0.04] text-gray-500 hover:text-gray-300'}`}><Icon className="w-4 h-4" />{label}</button>)}</nav>{rankingData.length ? page === 'ranking' ? <IndividualPanel rankingData={rankingData} /> : <InsightsPanel rankingData={rankingData} view={page} /> : <div className="text-gray-500 w-full text-center py-20">Sem dados suficientes para listar competidores.</div>}</div></main>
   </div>;
 }

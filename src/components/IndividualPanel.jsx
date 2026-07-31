@@ -7,17 +7,22 @@ const ACCENT = '#3B82F6';
 export function IndividualPanel({ rankingData }) {
   const [query, setQuery] = useState('');
   const [sortBy, setSortBy] = useState({ field: 'points', dir: 'desc' });
+  const [scoreRange, setScoreRange] = useState('all');
 
   const members = useMemo(() => {
     const q = query.trim().toLowerCase();
     return rankingData
-      .filter(member => !q || member.name.toLowerCase().includes(q) || member.formattedName.toLowerCase().includes(q))
+      .filter(member => {
+        const matchesQuery = !q || member.name.toLowerCase().includes(q) || member.formattedName.toLowerCase().includes(q);
+        const matchesRange = scoreRange === 'all' || (scoreRange === '0-25' && member.points <= 25) || (scoreRange === '26-50' && member.points >= 26 && member.points <= 50) || (scoreRange === '51-84' && member.points >= 51 && member.points < 85) || (scoreRange === '85' && member.points >= 85);
+        return matchesQuery && matchesRange;
+      })
       .sort((a, b) => {
         const direction = sortBy.dir === 'desc' ? -1 : 1;
         if (sortBy.field === 'name') return a.formattedName.localeCompare(b.formattedName) * direction;
         return (a.points - b.points) * direction;
       });
-  }, [query, rankingData, sortBy]);
+  }, [query, rankingData, scoreRange, sortBy]);
 
   const totalPoints = members.reduce((total, member) => total + member.points, 0);
   const setSort = (field) => setSortBy(previous => ({
@@ -27,12 +32,15 @@ export function IndividualPanel({ rankingData }) {
 
   return (
     <div className="w-full max-w-6xl mx-auto bg-[#0e0e16]/85 backdrop-blur-md border border-white/[0.06] rounded-2xl shadow-2xl overflow-hidden flex flex-col md:max-h-full">
-      <div className="p-4 border-b border-white/[0.06] flex items-center gap-3">
+      <div className="p-4 border-b border-white/[0.06] flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
           <input type="text" placeholder="Buscar competidor..." value={query} onChange={(event) => setQuery(event.target.value)} className="w-full bg-white/[0.04] border border-white/[0.06] rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-white/20" />
         </div>
-        <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold hidden sm:block">Ranking individual</span>
+        <select value={scoreRange} onChange={(event) => setScoreRange(event.target.value)} className="bg-white/[0.04] border border-white/[0.06] rounded-lg px-3 py-2 text-xs text-gray-300 focus:outline-none focus:border-white/20">
+          <option value="all">Todos os pontos</option><option value="0-25">0–25 pontos</option><option value="26-50">26–50 pontos</option><option value="51-84">51–84 pontos</option><option value="85">85 pontos</option>
+        </select>
+        <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold hidden lg:block">Ranking individual</span>
       </div>
 
       <div className="overflow-auto flex-1 min-h-0 scrollbar-thin">

@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .panel {
+    @apply bg-[#0e0e16]/85 backdrop-blur-md border border-white/[0.06] rounded-2xl shadow-2xl;
+  }
+}
+
 :root {
   color-scheme: dark;
 }
