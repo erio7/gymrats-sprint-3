@@ -10,5 +10,5 @@ export const FEED_CSV_URL = import.meta.env.VITE_FEED_CSV_URL || FALLBACK_FEED_C
 export const REFRESH_INTERVAL_MS =
   Number(import.meta.env.VITE_REFRESH_INTERVAL_MS) || 120_000;
 
-export const CHALLENGE_START = new Date('2026-04-15T00:00:00');
-export const CHALLENGE_END = new Date('2026-05-29T23:59:59');
+export const CHALLENGE_START = new Date('2026-08-01T00:00:00');
+export const CHALLENGE_END = new Date('2026-09-14T23:59:59');

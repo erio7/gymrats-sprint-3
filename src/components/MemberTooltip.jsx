@@ -24,6 +24,13 @@ export function MemberTooltip({ member, accentColor, children, style }) {
     { label: 'Sem 6', value: weeks.s6 },
     { label: 'Sem 7', value: weeks.s7 },
   ];
+  const challenges = member.challenges || {};
+  const challengeData = [
+    { label: 'D1 - 100k', value: challenges.d1 }, { label: 'D2 - Conv.', value: challenges.d2 },
+    { label: 'D3 - Equipe', value: challenges.d3 }, { label: 'D4 - Mãe', value: challenges.d4 },
+    { label: 'D5 - Extra', value: challenges.d5 }, { label: 'Relâmpago', value: challenges.dr },
+    { label: 'Gincana', value: challenges.gincana },
+  ];
 
   return (
     <>
@@ -66,6 +73,15 @@ export function MemberTooltip({ member, accentColor, children, style }) {
                   <span className="text-[12px] font-black" style={{ color: (w.value && w.value !== '0') ? accentColor : '#4B5563' }}>
                     {w.value || '0'}
                   </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 mt-2.5 pt-2 border-t border-white/[0.08]">
+              {challengeData.map((challenge) => (
+                <div key={challenge.label} className="flex items-baseline justify-between gap-1.5">
+                  <span className="text-[9px] uppercase tracking-wider text-gray-500 font-bold">{challenge.label}</span>
+                  <span className="text-[12px] font-black" style={{ color: (challenge.value && challenge.value !== '0') ? accentColor : '#4B5563' }}>{challenge.value || '0'}</span>
                 </div>
               ))}
             </div>
