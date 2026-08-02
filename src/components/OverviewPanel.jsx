@@ -2,7 +2,7 @@ import { Crown, Minus, TrendingDown, TrendingUp } from 'lucide-react';
 import { MemberTooltip } from './MemberTooltip';
 
 const DISPLAY_ORDER = [3, 1, 0, 2, 4];
-const CARD_OFFSETS = [64, 28, 0, 28, 64];
+const CARD_OFFSETS = [48, 22, 0, 22, 48];
 const MEDAL_COLORS = ['#F6C945', '#B9C2D0', '#C88149'];
 
 export function OverviewPanel({ rankingData }) {
@@ -13,7 +13,7 @@ export function OverviewPanel({ rankingData }) {
     <section className="panel relative px-4 pt-5 sm:px-7 sm:pt-6 overflow-hidden">
       <div className="absolute left-1/2 top-12 -translate-x-1/2 w-80 h-64 rounded-full bg-blue-500/10 blur-[80px] pointer-events-none" />
       <div className="relative flex items-start justify-between"><div><p className="text-[10px] uppercase tracking-[0.24em] font-black text-blue-400">Ranking geral</p><h2 className="text-xl sm:text-2xl font-black text-white mt-1">Top 5 da Sprint</h2></div><span className="hidden sm:block text-[10px] uppercase tracking-widest text-gray-600 font-bold">85 pontos possíveis</span></div>
-      <div className="relative overflow-x-auto mt-5"><div className="min-w-[880px] min-h-[300px] flex items-start gap-3 lg:gap-4 px-2 pb-6">{DISPLAY_ORDER.map((index, displayIndex) => { const member = topFive[index]; return member ? <PodiumCard key={member.memberKey} member={member} offset={CARD_OFFSETS[displayIndex]} /> : <div key={index} className="flex-1" />; })}</div></div>
+      <div className="relative overflow-x-auto mt-5"><div className="min-w-[880px] min-h-[250px] flex items-start gap-3 lg:gap-4 px-2 pb-5">{DISPLAY_ORDER.map((index, displayIndex) => { const member = topFive[index]; return member ? <PodiumCard key={member.memberKey} member={member} offset={CARD_OFFSETS[displayIndex]} /> : <div key={index} className="flex-1" />; })}</div></div>
     </section>
     {nextFive.length > 0 && <section className="panel overflow-hidden"><div className="px-5 pt-4 pb-2"><p className="text-[10px] uppercase tracking-[0.2em] font-black text-gray-500">Na cola do pódio</p></div><div className="grid sm:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.05]">{nextFive.map(member => <div key={member.memberKey} className="px-4 py-3 hover:bg-white/[0.02] transition-colors"><div className="flex items-center justify-between"><span className="text-xs font-black text-gray-500">{member.rank}º</span><Trend trend={member.trend} /></div><p className="text-sm font-bold text-white truncate mt-2">{member.formattedName}</p><p className="text-blue-400 font-black mt-1">{member.points}<span className="ml-1 text-[9px] text-gray-600">PTS</span></p></div>)}</div></section>}
   </div>;
@@ -22,7 +22,7 @@ export function OverviewPanel({ rankingData }) {
 function PodiumCard({ member, offset }) {
   const winner = member.rank === 1;
   const medal = MEDAL_COLORS[member.rank - 1] || '#5B8CFF';
-  const cardHeight = winner ? 232 : member.rank <= 3 ? 214 : 198;
+  const cardHeight = winner ? 192 : member.rank <= 3 ? 184 : 176;
   const flexSize = winner ? 1.16 : member.rank <= 3 ? 1.04 : 0.92;
   const percent = Math.round(Math.min(100, Math.max(0, member.points / 85 * 100)));
 
@@ -30,8 +30,8 @@ function PodiumCard({ member, offset }) {
     <div className="absolute inset-x-0 top-0 h-0.5" style={{ background: `linear-gradient(90deg, transparent, ${medal}, transparent)` }} />
     <span className="absolute -right-1 -bottom-5 text-8xl font-black opacity-[0.035] select-none" style={{ color: medal }}>{member.rank}</span>
     <div className="relative flex items-center justify-between"><span className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.16em] font-black" style={{ color: medal }}>{winner && <Crown className="w-3.5 h-3.5" />}{winner ? 'Líder atual' : `${member.rank}º lugar`}</span><Trend trend={member.trend} /></div>
-    <div className="relative flex-1 flex flex-col justify-center"><h3 className={`font-black text-white uppercase leading-tight break-words ${winner ? 'text-base' : 'text-sm'}`}>{member.formattedName}</h3><div className="flex items-baseline mt-3"><strong className={`${winner ? 'text-4xl' : 'text-3xl'} font-black text-white tracking-tight`}>{member.points}</strong><span className="ml-1.5 text-[9px] font-black tracking-widest" style={{ color: medal }}>PONTOS</span></div></div>
-    <div className="relative"><div className="flex justify-between items-center text-[9px] uppercase tracking-wider font-bold"><span className="text-gray-600">Progresso</span><span style={{ color: medal }}>{percent}%</span></div><Progress value={percent} color={medal} /></div>
+    <div className="relative mt-6"><h3 className={`font-black text-white uppercase leading-tight break-words ${winner ? 'text-base' : 'text-sm'}`}>{member.formattedName}</h3><div className="flex items-baseline mt-2"><strong className={`${winner ? 'text-4xl' : 'text-3xl'} font-black text-white tracking-tight`}>{member.points}</strong><span className="ml-1.5 text-[9px] font-black tracking-widest" style={{ color: medal }}>PONTOS</span></div></div>
+    <div className="relative mt-auto"><div className="flex justify-between items-center text-[9px] uppercase tracking-wider font-bold"><span className="text-gray-600">Progresso</span><span style={{ color: medal }}>{percent}%</span></div><Progress value={percent} color={medal} /></div>
   </article></MemberTooltip></div>;
 }
 
