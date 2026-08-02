@@ -1,4 +1,3 @@
-import { Instagram } from 'lucide-react';
 import { MediaItem } from './MediaItem';
 
 export function MediaFeed({ feedData }) {
@@ -28,9 +27,6 @@ export function MediaFeed({ feedData }) {
       <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-[#F7F7FB] to-transparent pointer-events-none" />
       <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[#F7F7FB] to-transparent pointer-events-none" />
 
-      <div className="absolute top-1.5 left-4 text-[9px] font-medium uppercase tracking-widest text-[#746B80] flex items-center gap-1.5">
-        <Instagram className="w-3 h-3" /> Feed
-      </div>
     </div>
   );
 }
