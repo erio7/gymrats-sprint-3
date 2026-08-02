@@ -3,13 +3,13 @@ import { MemberTooltip } from './MemberTooltip';
 
 const DISPLAY_ORDER = [3, 1, 0, 2, 4];
 const CARD_OFFSETS = [48, 22, 0, 22, 48];
-const MEDAL_COLORS = ['#F6C945', '#B9C2D0', '#C88149'];
+const MEDAL_COLORS = ['#A66B00', '#64748B', '#A85D28'];
 
 export function OverviewPanel({ rankingData }) {
   const topFive = rankingData.slice(0, 5);
   const nextFive = rankingData.slice(5, 10);
 
-  return <div className="w-full max-w-6xl mx-auto space-y-4">
+  return <div className="w-full max-w-[1500px] mx-auto space-y-4">
     <section className="panel relative px-4 pt-5 sm:px-7 sm:pt-6 overflow-hidden">
       <div className="absolute left-1/2 top-12 -translate-x-1/2 w-80 h-64 rounded-full bg-brand-100/70 blur-[80px] pointer-events-none" />
       <div className="relative flex items-start justify-between"><div><p className="text-[10px] uppercase tracking-[0.24em] font-black text-brand">Ranking geral</p><h2 className="text-xl sm:text-2xl font-black text-[#17131F] mt-1">Top 5 da Sprint</h2></div><span className="hidden sm:block text-[10px] uppercase tracking-widest text-[#8A8194] font-bold">85 pontos possíveis</span></div>
