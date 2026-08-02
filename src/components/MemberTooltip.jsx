@@ -54,53 +54,53 @@ export function MemberTooltip({ member, accentColor, children, style }) {
           <div
             className="relative mb-2 px-4 py-3 rounded-xl border shadow-2xl min-w-[220px]"
             style={{
-              background: 'rgba(12,12,20,0.95)',
+              background: 'rgba(255,255,255,0.98)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
               borderColor: `${accentColor}50`,
-              boxShadow: `0 0 30px ${accentColor}20, 0 20px 40px rgba(0,0,0,0.6)`,
+              boxShadow: `0 0 24px ${accentColor}18, 0 18px 38px rgba(69,45,91,0.16)`,
             }}
           >
-            <div className="flex items-center gap-2 mb-2.5 pb-2 border-b border-white/[0.08]">
+            <div className="flex items-center gap-2 mb-2.5 pb-2 border-b border-[#ECE8F1]">
               <div className="w-1.5 h-1.5 rounded-full" style={{ background: accentColor }} />
-              <span className="font-bold text-white text-[13px] truncate">{member.formattedName}</span>
+              <span className="font-bold text-[#241D2D] text-[13px] truncate">{member.formattedName}</span>
             </div>
 
             <div className="grid grid-cols-3 gap-x-3 gap-y-1.5">
               {weekData.map((w) => (
                 <div key={w.label} className="flex items-baseline justify-between gap-1.5">
-                  <span className="text-[9px] uppercase tracking-wider text-gray-500 font-bold">{w.label}</span>
-                  <span className="text-[12px] font-black" style={{ color: (w.value && w.value !== '0') ? accentColor : '#4B5563' }}>
+                  <span className="text-[9px] uppercase tracking-wider text-[#81778D] font-bold">{w.label}</span>
+                  <span className="text-[12px] font-black" style={{ color: (w.value && w.value !== '0') ? accentColor : '#AAA2B2' }}>
                     {w.value || '0'}
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 mt-2.5 pt-2 border-t border-white/[0.08]">
+            <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 mt-2.5 pt-2 border-t border-[#ECE8F1]">
               {challengeData.map((challenge) => (
                 <div key={challenge.label} className="flex items-baseline justify-between gap-1.5">
-                  <span className="text-[9px] uppercase tracking-wider text-gray-500 font-bold">{challenge.label}</span>
-                  <span className="text-[12px] font-black" style={{ color: (challenge.value && challenge.value !== '0') ? accentColor : '#4B5563' }}>{challenge.value || '0'}</span>
+                  <span className="text-[9px] uppercase tracking-wider text-[#81778D] font-bold">{challenge.label}</span>
+                  <span className="text-[12px] font-black" style={{ color: (challenge.value && challenge.value !== '0') ? accentColor : '#AAA2B2' }}>{challenge.value || '0'}</span>
                 </div>
               ))}
             </div>
 
-            <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-white/[0.08]">
+            <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-[#ECE8F1]">
               {member.extraPoints && member.extraPoints !== '0' && (
                 <div className="flex items-baseline gap-1">
-                  <span className="text-[9px] uppercase tracking-wider text-gray-500 font-bold">Extras</span>
-                  <span className="text-[12px] font-black text-emerald-400">+{member.extraPoints}</span>
+                  <span className="text-[9px] uppercase tracking-wider text-[#81778D] font-bold">Extras</span>
+                  <span className="text-[12px] font-black text-[#008C66]">+{member.extraPoints}</span>
                 </div>
               )}
               <div className="flex items-baseline gap-1 ml-auto">
-                <span className="text-[9px] uppercase tracking-wider text-gray-500 font-bold">Total</span>
+                <span className="text-[9px] uppercase tracking-wider text-[#81778D] font-bold">Total</span>
                 <span className="text-[14px] font-black" style={{ color: accentColor }}>{member.points}</span>
-                <span className="text-[9px] text-gray-600 font-bold">pts</span>
+                <span className="text-[9px] text-[#91889B] font-bold">pts</span>
               </div>
             </div>
 
-            <div className="absolute left-1/2 -translate-x-1/2 -bottom-[6px] w-3 h-3 rotate-45" style={{ background: 'rgba(12,12,20,0.95)', borderRight: `1px solid ${accentColor}50`, borderBottom: `1px solid ${accentColor}50` }} />
+            <div className="absolute left-1/2 -translate-x-1/2 -bottom-[6px] w-3 h-3 rotate-45" style={{ background: 'rgba(255,255,255,0.98)', borderRight: `1px solid ${accentColor}50`, borderBottom: `1px solid ${accentColor}50` }} />
           </div>
         </div>,
         document.body

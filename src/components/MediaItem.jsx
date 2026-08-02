@@ -26,10 +26,10 @@ export function MediaItem({ url }) {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative mx-1.5 w-28 h-28 rounded-xl overflow-hidden border border-white/[0.05] bg-[#0e0e16] shrink-0 group transition-all duration-300 hover:scale-105 hover:z-20 hover:border-white/20 cursor-pointer">
+    <div ref={containerRef} className="relative mx-1.5 w-28 h-28 rounded-xl overflow-hidden border border-[#E2DDEA] bg-white shrink-0 group transition-all duration-300 hover:scale-105 hover:z-20 hover:border-brand-300 cursor-pointer shadow-sm">
       {!loaded && (
-        <div className="absolute inset-0 bg-[#12121a] animate-pulse flex items-center justify-center z-0">
-          <Loader2 className="w-5 h-5 text-gray-600 animate-spin" />
+        <div className="absolute inset-0 bg-[#F0EDF5] animate-pulse flex items-center justify-center z-0">
+          <Loader2 className="w-5 h-5 text-brand-300 animate-spin" />
         </div>
       )}
 
