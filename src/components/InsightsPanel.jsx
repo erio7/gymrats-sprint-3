@@ -45,4 +45,10 @@ function HighlightCard({ highlight }) {
 }
 
 function SectionTitle({ icon: Icon, title, subtitle }) { return <div><div className="flex items-center gap-2 text-brand"><Icon className="w-4 h-4" /><h2 className="font-black text-[#17131F]">{title}</h2></div><p className="text-xs text-[#81778D] mt-1">{subtitle}</p></div>; }
-function WeeklyBars({ weeks }) { const max = Math.max(...weeks.map(week => week.value), 1); return <div className="mt-7 flex items-end gap-2 h-52">{weeks.map(week => <div key={week.label} className="flex-1 h-full flex flex-col justify-end items-center gap-2"><span className="text-xs text-[#241D2D] font-bold">{week.value || '—'}</span><div className="w-full max-w-14 rounded-t-lg bg-gradient-to-t from-brand-700 to-brand-400 min-h-[4px]" style={{ height: `${week.value / max * 100}%` }} /><span className="text-[10px] text-[#81778D] uppercase">{week.label.replace('Semana ', 'S')}</span></div>)}</div>; }
+function WeeklyBars({ weeks }) {
+  const max = Math.max(...weeks.map(week => week.value), 1);
+  return <div className="mt-7 flex gap-2 h-52 border-b border-[#E8E3ED]">{weeks.map(week => {
+    const barHeight = week.value > 0 ? Math.max(6, Math.round(week.value / max * 140)) : 4;
+    return <div key={week.label} className="flex-1 h-full flex flex-col items-center justify-end"><div className="h-[168px] w-full flex flex-col items-center justify-end gap-2"><span className="text-xs text-[#241D2D] font-bold">{week.value || '—'}</span><div className="w-full max-w-14 shrink-0 rounded-t-lg bg-gradient-to-t from-brand-700 to-brand-400 shadow-sm shadow-brand/10" style={{ height: barHeight }} /></div><span className="h-8 pt-2 text-[10px] text-[#81778D] uppercase">{week.label.replace('Semana ', 'S')}</span></div>;
+  })}</div>;
+}
