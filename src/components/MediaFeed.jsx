@@ -12,14 +12,15 @@ export function MediaFeed({ feedData }) {
           100% { transform: translateX(-50%); }
         }
         .animate-scroll {
-          animation: scroll 280s linear infinite;
+          animation: scroll 75s linear infinite;
+          will-change: transform;
         }
         .animate-scroll:hover {
           animation-play-state: paused;
         }
       `}</style>
       <div className="flex w-max animate-scroll">
-        {[...feedData, ...feedData, ...feedData].map((url, idx) => (
+        {[...feedData, ...feedData].map((url, idx) => (
           <MediaItem key={`${idx}-${url}`} url={url} />
         ))}
       </div>
