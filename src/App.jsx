@@ -6,7 +6,7 @@ import { ChallengeCountdown } from './components/ChallengeCountdown';
 import { IndividualPanel } from './components/IndividualPanel';
 import { InsightsPanel } from './components/InsightsPanel';
 import { MediaFeed } from './components/MediaFeed';
-import { OverviewPanel } from './components/OverviewPanel';
+import { GroupedOverviewPanel } from './components/GroupedOverviewPanel';
 import { StatCard } from './components/StatCard';
 import { useGoogleSheetsData } from './hooks/useGoogleSheetsData';
 import { computeRanking } from './lib/ranking';
@@ -22,7 +22,7 @@ export default function App() {
   if (loading) return <div className="min-h-screen bg-[#F7F7FB] flex items-center justify-center"><div className="flex flex-col items-center gap-4"><Loader2 className="w-10 h-10 animate-spin text-brand" /><p className="text-[#746B80] font-medium tracking-widest uppercase">Carregando Gym Rats...</p></div></div>;
   if (error) return <div className="min-h-screen bg-[#F7F7FB] flex items-center justify-center p-6"><div className="bg-white p-8 rounded-2xl shadow-xl border border-red-200 max-w-md w-full text-center"><AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" /><h2 className="text-xl font-bold text-[#17131F] mb-2">Erro de conexão</h2><p className="text-[#746B80] mb-6">{error}</p><button onClick={() => window.location.reload()} className="px-6 py-2.5 bg-brand hover:bg-brand-700 text-white rounded-xl font-semibold">Tentar novamente</button></div></div>;
 
-  const content = !rankingData.length ? <div className="text-gray-500 w-full text-center py-20">Sem dados suficientes para listar competidores.</div> : page === 'overview' ? <OverviewPanel rankingData={rankingData} /> : page === 'ranking' ? <IndividualPanel rankingData={rankingData} /> : <InsightsPanel rankingData={rankingData} view={page} />;
+  const content = !rankingData.length ? <div className="text-gray-500 w-full text-center py-20">Sem dados suficientes para listar competidores.</div> : page === 'overview' ? <GroupedOverviewPanel rankingData={rankingData} /> : page === 'ranking' ? <IndividualPanel rankingData={rankingData} /> : <InsightsPanel rankingData={rankingData} view={page} />;
 
   return <div className="h-screen bg-[#F7F7FB] text-[#17131F] font-sans flex flex-col relative overflow-hidden">
     <div className="fixed inset-0 pointer-events-none z-0"><div className="absolute -top-40 left-1/3 w-[48rem] h-[32rem] rounded-full blur-[140px] opacity-30 bg-brand-100" /><div className="absolute -bottom-40 right-0 w-[36rem] h-[28rem] rounded-full blur-[140px] opacity-30 bg-accent-100" /></div>
