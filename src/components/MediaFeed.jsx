@@ -1,57 +1,69 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MediaItem } from './MediaItem';
 
-const AUTOPLAY_INTERVAL_MS = 5_000;
 const ITEM_STEP_PX = 140;
+const ITEM_TRAVEL_TIME_MS = 5_000;
+const MANUAL_MOVE_TIME_MS = 850;
+
+const easeInOutCubic = progress => progress < 0.5
+  ? 4 * progress * progress * progress
+  : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
 export function MediaFeed({ feedData }) {
+  const trackRef = useRef(null);
+  const offsetRef = useRef(0);
+  const manualQueueRef = useRef(0);
   const itemCount = feedData?.length || 0;
-  const [currentIndex, setCurrentIndex] = useState(itemCount);
-  const [withTransition, setWithTransition] = useState(true);
-  const [interactionVersion, setInteractionVersion] = useState(0);
-  const resetFrameRef = useRef(null);
-
-  const moveCarousel = useCallback((direction) => {
-    setWithTransition(true);
-    setCurrentIndex(index => index + direction);
-  }, []);
 
   useEffect(() => {
-    setWithTransition(false);
-    setCurrentIndex(itemCount);
-    const frameId = window.requestAnimationFrame(() => setWithTransition(true));
-    return () => window.cancelAnimationFrame(frameId);
+    const track = trackRef.current;
+    if (!track || !itemCount) return undefined;
+
+    const loopWidth = itemCount * ITEM_STEP_PX;
+    const automaticSpeed = ITEM_STEP_PX / ITEM_TRAVEL_TIME_MS;
+    let animationFrameId;
+    let lastFrameTime = performance.now();
+    let manualMove = null;
+
+    offsetRef.current = loopWidth;
+    track.style.transform = `translate3d(-${offsetRef.current}px, 0, 0)`;
+
+    const animate = (now) => {
+      const elapsed = Math.min(now - lastFrameTime, 64);
+      lastFrameTime = now;
+      let nextOffset = offsetRef.current + elapsed * automaticSpeed;
+
+      if (!manualMove && Math.abs(manualQueueRef.current) >= ITEM_STEP_PX) {
+        const direction = Math.sign(manualQueueRef.current);
+        manualQueueRef.current -= direction * ITEM_STEP_PX;
+        manualMove = { startedAt: now, distance: direction * ITEM_STEP_PX, applied: 0 };
+      }
+
+      if (manualMove) {
+        const progress = Math.min(1, (now - manualMove.startedAt) / MANUAL_MOVE_TIME_MS);
+        const desiredDistance = manualMove.distance * easeInOutCubic(progress);
+        nextOffset += desiredDistance - manualMove.applied;
+        manualMove.applied = desiredDistance;
+        if (progress === 1) manualMove = null;
+      }
+
+      if (nextOffset >= loopWidth * 2) nextOffset -= loopWidth;
+      if (nextOffset < loopWidth) nextOffset += loopWidth;
+
+      offsetRef.current = nextOffset;
+      track.style.transform = `translate3d(-${nextOffset}px, 0, 0)`;
+      animationFrameId = window.requestAnimationFrame(animate);
+    };
+
+    animationFrameId = window.requestAnimationFrame(animate);
+    return () => window.cancelAnimationFrame(animationFrameId);
   }, [itemCount]);
-
-  useEffect(() => {
-    if (!itemCount) return undefined;
-    const intervalId = window.setInterval(() => moveCarousel(1), AUTOPLAY_INTERVAL_MS);
-    return () => window.clearInterval(intervalId);
-  }, [interactionVersion, itemCount, moveCarousel]);
-
-  useEffect(() => () => {
-    if (resetFrameRef.current) window.cancelAnimationFrame(resetFrameRef.current);
-  }, []);
 
   if (!itemCount) return null;
 
-  const handleManualMove = (direction) => {
-    moveCarousel(direction);
-    setInteractionVersion(version => version + 1);
-  };
-
-  const handleTransitionEnd = () => {
-    let normalizedIndex = currentIndex;
-    if (currentIndex >= itemCount * 2) normalizedIndex = currentIndex - itemCount;
-    if (currentIndex < itemCount) normalizedIndex = currentIndex + itemCount;
-    if (normalizedIndex === currentIndex) return;
-
-    setWithTransition(false);
-    setCurrentIndex(normalizedIndex);
-    resetFrameRef.current = window.requestAnimationFrame(() => {
-      resetFrameRef.current = window.requestAnimationFrame(() => setWithTransition(true));
-    });
+  const moveCarousel = (direction) => {
+    manualQueueRef.current += direction * ITEM_STEP_PX;
   };
 
   const carouselItems = [...feedData, ...feedData, ...feedData];
@@ -59,17 +71,17 @@ export function MediaFeed({ feedData }) {
   return (
     <div className="hidden md:block relative z-10 border-b border-[#E9E5F0] bg-white/65 py-2.5 overflow-hidden">
       <div
-        className={`flex w-max gap-3 will-change-transform [backface-visibility:hidden] ${withTransition ? 'transition-transform duration-[1400ms] ease-[cubic-bezier(0.65,0,0.35,1)]' : ''}`}
-        style={{ transform: `translate3d(-${currentIndex * ITEM_STEP_PX}px, 0, 0)` }}
-        onTransitionEnd={handleTransitionEnd}
+        ref={trackRef}
+        className="flex w-max gap-3 will-change-transform [backface-visibility:hidden]"
+        style={{ transform: `translate3d(-${itemCount * ITEM_STEP_PX}px, 0, 0)` }}
       >
         {carouselItems.map((url, idx) => (
           <MediaItem key={`${idx}-${url}`} url={url} />
         ))}
       </div>
 
-      <CarouselEdge direction="left" onClick={() => handleManualMove(-1)} />
-      <CarouselEdge direction="right" onClick={() => handleManualMove(1)} />
+      <CarouselEdge direction="left" onClick={() => moveCarousel(-1)} />
+      <CarouselEdge direction="right" onClick={() => moveCarousel(1)} />
     </div>
   );
 }
