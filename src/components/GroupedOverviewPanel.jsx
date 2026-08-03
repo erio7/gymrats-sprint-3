@@ -61,7 +61,7 @@ export function GroupedOverviewPanel({ rankingData }) {
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-[10px] uppercase tracking-[0.2em] font-black text-brand">Mapa da disputa</p>
-            <h3 className="text-base font-black text-[#17131F] mt-1">Distância da liderança</h3>
+            <h3 className="text-base font-black text-[#17131F] mt-1">Distribuição da disputa</h3>
           </div>
           <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-50 text-brand text-[9px] font-black uppercase tracking-wider">
             <Users className="w-3 h-3" /> {rankingData.length} competidores
@@ -71,12 +71,12 @@ export function GroupedOverviewPanel({ rankingData }) {
         <div className="space-y-2.5 mt-4">
           {scoreGroups.slice(0, 6).map((group, index) => {
             const style = GROUP_STYLES[index] || FALLBACK_STYLE;
-            const progress = leaderPoints > 0 ? Math.max(group.points > 0 ? 7 : 2, group.points / leaderPoints * 100) : 100;
+            const progress = rankingData.length ? group.members.length / rankingData.length * 100 : 0;
             return <div key={`${group.rank}-${group.points}`} className="grid grid-cols-[42px_1fr_auto] sm:grid-cols-[52px_1fr_auto] gap-2.5 items-center">
               <span className="text-xs font-black text-[#746B80]">{group.rank}º</span>
               <div className="min-w-0">
                 <div className="flex items-center justify-between gap-3 mb-1.5">
-                  <span className="text-xs font-bold text-[#31293B] truncate">{group.members.length} {group.members.length === 1 ? 'competidor' : 'competidores'}</span>
+                  <span className="text-xs font-bold text-[#31293B] truncate">{group.members.length} de {rankingData.length} {rankingData.length === 1 ? 'competidor' : 'competidores'}</span>
                   <span className="text-[10px] font-bold text-[#91889B]">{Math.max(0, leaderPoints - group.points)} atrás</span>
                 </div>
                 <div className="h-2 rounded-full bg-[#EEEAF2] overflow-hidden">
