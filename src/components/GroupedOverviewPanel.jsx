@@ -31,13 +31,17 @@ export function GroupedOverviewPanel({ rankingData, datasetData = [] }) {
       : 'As maiores pontuações aparecem em destaque, sem empates no momento.';
   const gridColumns = featuredGroups.length === 1 ? 'lg:grid-cols-1' : featuredGroups.length === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-3';
 
-  return <div className="w-full max-w-[1500px] mx-auto space-y-3">
-    <section className="panel relative overflow-hidden px-4 py-4 sm:px-5 sm:py-5">
-      <div className="absolute -top-28 -right-20 w-80 h-80 rounded-full bg-brand-100/70 blur-[90px] pointer-events-none" />
-      <div className="absolute -bottom-36 left-1/4 w-72 h-72 rounded-full bg-accent-100/60 blur-[100px] pointer-events-none" />
+  return <div className="relative w-full max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-3 items-stretch min-[1700px]:left-1/2 min-[1700px]:w-[calc(100vw-2rem)] min-[1700px]:max-w-[1880px] min-[1700px]:-translate-x-1/2 min-[1700px]:grid-cols-[270px_minmax(0,1fr)_320px]">
+    <aside className="order-2 min-w-0 min-[1700px]:order-1">
+      <WorkoutCuriosityCarousel datasetData={datasetData} />
+    </aside>
 
-      <div className="relative">
-        <div>
+    <div className="order-1 min-w-0 space-y-3 lg:col-span-2 min-[1700px]:order-2 min-[1700px]:col-span-1">
+      <section className="panel relative overflow-hidden px-4 py-4 sm:px-5 sm:py-5">
+        <div className="absolute -top-28 -right-20 w-80 h-80 rounded-full bg-brand-100/70 blur-[90px] pointer-events-none" />
+        <div className="absolute -bottom-36 left-1/4 w-72 h-72 rounded-full bg-accent-100/60 blur-[100px] pointer-events-none" />
+
+        <div className="relative">
           <div className="flex items-center gap-2 text-brand">
             <Layers3 className="w-4 h-4" />
             <p className="text-[10px] uppercase tracking-[0.24em] font-black">Ranking agrupado</p>
@@ -45,48 +49,47 @@ export function GroupedOverviewPanel({ rankingData, datasetData = [] }) {
           <h2 className="text-xl sm:text-2xl font-black text-[#17131F] tracking-tight mt-1">{viewTitle}</h2>
           <p className="text-xs text-[#746B80] mt-1">{viewDescription}</p>
         </div>
-      </div>
 
-      <div className={`relative grid grid-cols-1 ${gridColumns} gap-3 mt-4`}>
-        {featuredGroups.map((group, index) => <ScoreGroupCard key={`${group.rank}-${group.points}`} group={group} index={index} />)}
-      </div>
-    </section>
+        <div className={`relative grid grid-cols-1 ${gridColumns} gap-3 mt-4`}>
+          {featuredGroups.map((group, index) => <ScoreGroupCard key={`${group.rank}-${group.points}`} group={group} index={index} />)}
+        </div>
+      </section>
 
-    <section className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch">
-      <div className="panel px-4 py-4 sm:px-5 lg:col-span-5">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.2em] font-black text-brand">Mapa da disputa</p>
-            <h3 className="text-base font-black text-[#17131F] mt-1">Distribuição da disputa</h3>
+      <section className="panel px-4 py-4 sm:px-5">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.2em] font-black text-brand">Mapa da disputa</p>
+              <h3 className="text-base font-black text-[#17131F] mt-1">Distribuição da disputa</h3>
+            </div>
+            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-50 text-brand text-[9px] font-black uppercase tracking-wider">
+              <Users className="w-3 h-3" /> {rankingData.length} competidores
+            </span>
           </div>
-          <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-50 text-brand text-[9px] font-black uppercase tracking-wider">
-            <Users className="w-3 h-3" /> {rankingData.length} competidores
-          </span>
-        </div>
 
-        <div className="space-y-2.5 mt-4">
-          {scoreGroups.slice(0, 6).map((group, index) => {
-            const style = GROUP_STYLES[index] || FALLBACK_STYLE;
-            const progress = rankingData.length ? group.members.length / rankingData.length * 100 : 0;
-            return <div key={`${group.rank}-${group.points}`} className="grid grid-cols-[42px_1fr_auto] sm:grid-cols-[52px_1fr_auto] gap-2.5 items-center">
-              <span className="text-xs font-black text-[#746B80]">{group.rank}º</span>
-              <div className="min-w-0">
-                <div className="flex items-center gap-3 mb-1.5">
-                  <span className="text-xs font-bold text-[#31293B] truncate">{group.members.length} de {rankingData.length} {rankingData.length === 1 ? 'competidor' : 'competidores'}</span>
+          <div className="space-y-2.5 mt-4">
+            {scoreGroups.slice(0, 6).map((group, index) => {
+              const style = GROUP_STYLES[index] || FALLBACK_STYLE;
+              const progress = rankingData.length ? group.members.length / rankingData.length * 100 : 0;
+              return <div key={`${group.rank}-${group.points}`} className="grid grid-cols-[42px_1fr_auto] sm:grid-cols-[52px_1fr_auto] gap-2.5 items-center">
+                <span className="text-xs font-black text-[#746B80]">{group.rank}º</span>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-3 mb-1.5">
+                    <span className="text-xs font-bold text-[#31293B] truncate">{group.members.length} de {rankingData.length} {rankingData.length === 1 ? 'competidor' : 'competidores'}</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-[#EEEAF2] overflow-hidden">
+                    <div className="h-full rounded-full transition-[width] duration-700" style={{ width: `${progress}%`, background: style.bar }} />
+                  </div>
                 </div>
-                <div className="h-2 rounded-full bg-[#EEEAF2] overflow-hidden">
-                  <div className="h-full rounded-full transition-[width] duration-700" style={{ width: `${progress}%`, background: style.bar }} />
-                </div>
-              </div>
-              <div className="w-12 text-right"><strong className="text-base text-[#17131F]">{group.points}</strong><span className="text-[8px] ml-1 font-black text-[#91889B]">PTS</span></div>
-            </div>;
-          })}
-        </div>
-      </div>
+                <div className="w-12 text-right"><strong className="text-base text-[#17131F]">{group.points}</strong><span className="text-[8px] ml-1 font-black text-[#91889B]">PTS</span></div>
+              </div>;
+            })}
+          </div>
+      </section>
+    </div>
 
-      <div className="lg:col-span-3"><WorkoutCuriosityCarousel datasetData={datasetData} /></div>
-      <div className="lg:col-span-4"><SprintJourney startDate={CHALLENGE_START} endDate={CHALLENGE_END} /></div>
-    </section>
+    <aside className="order-3 min-w-0 min-[1700px]:order-3">
+      <SprintJourney startDate={CHALLENGE_START} endDate={CHALLENGE_END} />
+    </aside>
   </div>;
 }
 
