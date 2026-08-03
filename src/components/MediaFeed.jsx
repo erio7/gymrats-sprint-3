@@ -2,55 +2,68 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MediaItem } from './MediaItem';
 
-const AUTOPLAY_INTERVAL_MS = 8_000;
-const ITEM_GAP_PX = 12;
+const AUTOPLAY_INTERVAL_MS = 5_000;
+const ITEM_STEP_PX = 140;
 
 export function MediaFeed({ feedData }) {
-  const trackRef = useRef(null);
-  const [isHovered, setIsHovered] = useState(false);
+  const itemCount = feedData?.length || 0;
+  const [currentIndex, setCurrentIndex] = useState(itemCount);
+  const [withTransition, setWithTransition] = useState(true);
   const [interactionVersion, setInteractionVersion] = useState(0);
+  const resetFrameRef = useRef(null);
 
   const moveCarousel = useCallback((direction) => {
-    const track = trackRef.current;
-    const firstItem = track?.firstElementChild;
-    if (!track || !firstItem) return;
-
-    const loopWidth = track.scrollWidth / 2;
-    const step = firstItem.getBoundingClientRect().width + ITEM_GAP_PX;
-
-    if (direction < 0 && track.scrollLeft <= 1) {
-      track.scrollLeft = loopWidth;
-    } else if (direction > 0 && track.scrollLeft >= loopWidth - 1) {
-      track.scrollLeft -= loopWidth;
-    }
-
-    track.scrollBy({ left: direction * step, behavior: 'smooth' });
+    setWithTransition(true);
+    setCurrentIndex(index => index + direction);
   }, []);
 
   useEffect(() => {
-    if (isHovered || !feedData?.length) return undefined;
+    setWithTransition(false);
+    setCurrentIndex(itemCount);
+    const frameId = window.requestAnimationFrame(() => setWithTransition(true));
+    return () => window.cancelAnimationFrame(frameId);
+  }, [itemCount]);
+
+  useEffect(() => {
+    if (!itemCount) return undefined;
     const intervalId = window.setInterval(() => moveCarousel(1), AUTOPLAY_INTERVAL_MS);
     return () => window.clearInterval(intervalId);
-  }, [feedData, interactionVersion, isHovered, moveCarousel]);
+  }, [interactionVersion, itemCount, moveCarousel]);
 
-  if (!feedData || feedData.length === 0) return null;
+  useEffect(() => () => {
+    if (resetFrameRef.current) window.cancelAnimationFrame(resetFrameRef.current);
+  }, []);
+
+  if (!itemCount) return null;
 
   const handleManualMove = (direction) => {
     moveCarousel(direction);
     setInteractionVersion(version => version + 1);
   };
 
+  const handleTransitionEnd = () => {
+    let normalizedIndex = currentIndex;
+    if (currentIndex >= itemCount * 2) normalizedIndex = currentIndex - itemCount;
+    if (currentIndex < itemCount) normalizedIndex = currentIndex + itemCount;
+    if (normalizedIndex === currentIndex) return;
+
+    setWithTransition(false);
+    setCurrentIndex(normalizedIndex);
+    resetFrameRef.current = window.requestAnimationFrame(() => {
+      resetFrameRef.current = window.requestAnimationFrame(() => setWithTransition(true));
+    });
+  };
+
+  const carouselItems = [...feedData, ...feedData, ...feedData];
+
   return (
-    <div
-      className="hidden md:block relative z-10 border-b border-[#E9E5F0] bg-white/65 py-2.5 overflow-hidden"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="hidden md:block relative z-10 border-b border-[#E9E5F0] bg-white/65 py-2.5 overflow-hidden">
       <div
-        ref={trackRef}
-        className="flex overflow-x-auto overflow-y-hidden scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className={`flex w-max gap-3 will-change-transform ${withTransition ? 'transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]' : ''}`}
+        style={{ transform: `translate3d(-${currentIndex * ITEM_STEP_PX}px, 0, 0)` }}
+        onTransitionEnd={handleTransitionEnd}
       >
-        {[...feedData, ...feedData].map((url, idx) => (
+        {carouselItems.map((url, idx) => (
           <MediaItem key={`${idx}-${url}`} url={url} />
         ))}
       </div>

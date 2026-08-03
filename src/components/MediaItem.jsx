@@ -6,7 +6,7 @@ export function MediaItem({ url }) {
   const isVideo = url.match(/\.(mp4|mov|webm)$/i);
 
   return (
-    <div className="relative mx-1.5 w-32 h-32 rounded-xl overflow-hidden border border-[#E2DDEA] bg-white shrink-0 group transition-all duration-300 hover:scale-105 hover:z-20 hover:border-brand-300 cursor-pointer shadow-sm">
+    <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-[#E2DDEA] bg-white shrink-0 group transition-all duration-300 hover:scale-105 hover:z-20 hover:border-brand-300 cursor-pointer shadow-sm">
       {!loaded && (
         <div className="absolute inset-0 bg-[#F0EDF5] animate-pulse flex items-center justify-center z-0">
           <Loader2 className="w-5 h-5 text-brand-300 animate-spin" />
