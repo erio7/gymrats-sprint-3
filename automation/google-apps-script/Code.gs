@@ -4,6 +4,8 @@ const MEDIA_SYNC_CONFIG = Object.freeze({
   feedSheetGid: 1605139045,
   mediaCsvName: 'check_in_media.csv',
   feedHeader: 'thumbnail_url',
+  batchHeader: 'batch_id',
+  importedAtHeader: 'imported_at',
   lastZipVersionProperty: 'GYMRATS_LAST_MEDIA_ZIP_VERSION',
 });
 
@@ -23,6 +25,8 @@ function syncLatestCheckInMedia() {
 
     const zipVersion = `${latestZip.getId()}:${latestZip.getLastUpdated().getTime()}`;
     const properties = PropertiesService.getScriptProperties();
+    const sheet = getFeedSheet_();
+    ensureFeedSchema_(sheet);
     if (properties.getProperty(MEDIA_SYNC_CONFIG.lastZipVersionProperty) === zipVersion) {
       return { status: 'unchanged', file: latestZip.getName(), added: 0 };
     }
@@ -36,8 +40,7 @@ function syncLatestCheckInMedia() {
     }
 
     const mediaUrls = readMediaUrls_(mediaBlob);
-    const sheet = getFeedSheet_();
-    const added = appendNewUrls_(sheet, mediaUrls);
+    const added = appendNewUrls_(sheet, mediaUrls, zipVersion);
 
     properties.setProperties({
       [MEDIA_SYNC_CONFIG.lastZipVersionProperty]: zipVersion,
@@ -132,15 +135,29 @@ function getFeedSheet_() {
   return sheet;
 }
 
-function appendNewUrls_(sheet, mediaUrls) {
+function ensureFeedSchema_(sheet) {
   if (sheet.getLastRow() === 0) {
-    sheet.getRange(1, 1).setValue(MEDIA_SYNC_CONFIG.feedHeader);
+    sheet.getRange(1, 1, 1, 3).setValues([[
+      MEDIA_SYNC_CONFIG.feedHeader,
+      MEDIA_SYNC_CONFIG.batchHeader,
+      MEDIA_SYNC_CONFIG.importedAtHeader,
+    ]]);
+    return;
   }
 
   const currentHeader = String(sheet.getRange(1, 1).getValue()).trim();
   if (currentHeader !== MEDIA_SYNC_CONFIG.feedHeader) {
     throw new Error(`Cabeçalho esperado: ${MEDIA_SYNC_CONFIG.feedHeader}. Encontrado: ${currentHeader}.`);
   }
+
+  sheet.getRange(1, 2, 1, 2).setValues([[
+    MEDIA_SYNC_CONFIG.batchHeader,
+    MEDIA_SYNC_CONFIG.importedAtHeader,
+  ]]);
+}
+
+function appendNewUrls_(sheet, mediaUrls, batchId) {
+  ensureFeedSchema_(sheet);
 
   const existingValues = sheet.getLastRow() > 1
     ? sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).getDisplayValues().flat()
@@ -149,8 +166,9 @@ function appendNewUrls_(sheet, mediaUrls) {
   const newUrls = mediaUrls.filter(url => !knownUrls.has(url));
 
   if (newUrls.length) {
-    sheet.getRange(sheet.getLastRow() + 1, 1, newUrls.length, 1)
-      .setValues(newUrls.map(url => [url]));
+    const importedAt = new Date();
+    sheet.getRange(sheet.getLastRow() + 1, 1, newUrls.length, 3)
+      .setValues(newUrls.map(url => [url, batchId, importedAt]));
   }
 
   return newUrls.length;

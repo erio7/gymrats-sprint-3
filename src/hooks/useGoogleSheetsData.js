@@ -43,11 +43,17 @@ export function useGoogleSheetsData({ rankingUrl, feedUrl, refreshIntervalMs }) 
         .then(text => {
           const { data: jsonData, headers } = parseCsvToJson(text);
           validateColumns(headers, REQUIRED_FEED_COLUMNS, 'Feed CSV');
-          const media = jsonData
-            .map(item => item.thumbnail_url || item.url)
-            .filter(url => url && url.length > 5)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 15);
+          const mediaRows = jsonData.map(item => ({
+            url: item.thumbnail_url || item.url,
+            batchId: item.batch_id || '',
+          }));
+          const latestBatchId = [...mediaRows].reverse().find(item => item.batchId)?.batchId;
+          const latestRows = latestBatchId
+            ? mediaRows.filter(item => item.batchId === latestBatchId)
+            : mediaRows.slice(-15);
+          const media = latestRows
+            .map(item => item.url)
+            .filter(url => url && url.length > 5);
           if (!cancelled) setFeedData(media);
         })
         .catch(err => {
