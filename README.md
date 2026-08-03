@@ -24,7 +24,7 @@ As regras de modalidade, duração e validade são tratadas antes da consolidaç
 - **Destaques:** líderes de cada desafio, relâmpago e gincana.
 - **Detalhes do competidor:** tooltip com semanas, desafios, extras e total.
 - **Tendência semanal:** compara a pontuação da última semana preenchida com a semana anterior; não representa mudança de posição no ranking.
-- **Feed de mídia:** carrossel contínuo, controles laterais e exibição somente do lote mais recente de fotos importadas.
+- **Feed de mídia:** carrossel contínuo, controles laterais e janela semanal com até 24 fotos recentes.
 - **Atualização automática:** ranking e feed são consultados novamente a cada 2 minutos.
 - **Layout responsivo:** tema claro da TD Business para desktop, tablet e celular.
 - **Contagem regressiva:** acompanha os 45 dias da Sprint 3.
@@ -72,7 +72,7 @@ batch_id
 imported_at
 ```
 
-O frontend também aceita `url` como fallback. Quando existem registros com `batch_id`, somente o lote mais recente é exibido. Para dados antigos sem lote, são usadas as 15 últimas URLs.
+O frontend também aceita `url` como fallback. Os lotes importados entre sábado e sexta-feira são reunidos, os mais novos aparecem primeiro e o carrossel fica limitado a 24 URLs únicas. Ao virar a semana, as fotos anteriores continuam visíveis até chegar a primeira importação da semana nova. Para dados antigos sem `imported_at`, permanece o fallback de exibir somente o lote mais recente.
 
 ## Automação do feed
 
@@ -87,7 +87,7 @@ thumbnail_url ou url
         ↓
 URLs inéditas + batch_id na aba do feed
         ↓
-Carrossel mostra somente o lote mais recente
+Carrossel reúne os lotes da semana e mostra até 24 fotos
 ```
 
 O script:
@@ -97,6 +97,7 @@ O script:
 - utiliza `thumbnail_url` e recorre a `url` quando necessário;
 - mantém histórico sem duplicar URLs;
 - identifica cada importação com fotos novas por `batch_id`;
+- usa `imported_at` para agrupar os lotes na semana de sábado a sexta;
 - registra o ZIP já processado e executa de hora em hora.
 
 Consulte as [instruções de instalação do Apps Script](automation/google-apps-script/README.md). A aba do feed pode permanecer oculta no Google Sheets, mas não deve ser excluída nem removida da publicação.

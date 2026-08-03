@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { parseCsvToJson, validateColumns } from '../lib/csv';
+import { selectWeeklyMedia } from '../lib/media';
 
 const REQUIRED_RANKING_COLUMNS = [
   'NOME',
@@ -43,17 +44,7 @@ export function useGoogleSheetsData({ rankingUrl, feedUrl, refreshIntervalMs }) 
         .then(text => {
           const { data: jsonData, headers } = parseCsvToJson(text);
           validateColumns(headers, REQUIRED_FEED_COLUMNS, 'Feed CSV');
-          const mediaRows = jsonData.map(item => ({
-            url: item.thumbnail_url || item.url,
-            batchId: item.batch_id || '',
-          }));
-          const latestBatchId = [...mediaRows].reverse().find(item => item.batchId)?.batchId;
-          const latestRows = latestBatchId
-            ? mediaRows.filter(item => item.batchId === latestBatchId)
-            : mediaRows.slice(-15);
-          const media = latestRows
-            .map(item => item.url)
-            .filter(url => url && url.length > 5);
+          const media = selectWeeklyMedia(jsonData);
           if (!cancelled) setFeedData(media);
         })
         .catch(err => {
