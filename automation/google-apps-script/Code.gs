@@ -53,7 +53,7 @@ function syncLatestCheckInMedia() {
   }
 }
 
-/** Cria um único gatilho que verifica a pasta a cada cinco minutos. */
+/** Cria um único gatilho que verifica a pasta uma vez por hora. */
 function createMediaSyncTrigger() {
   ScriptApp.getProjectTriggers()
     .filter(trigger => trigger.getHandlerFunction() === 'syncLatestCheckInMedia')
@@ -61,7 +61,7 @@ function createMediaSyncTrigger() {
 
   ScriptApp.newTrigger('syncLatestCheckInMedia')
     .timeBased()
-    .everyMinutes(5)
+    .everyHours(1)
     .create();
 
   return syncLatestCheckInMedia();

@@ -7,7 +7,7 @@ Esta automação procura o ZIP mais recentemente atualizado na pasta do Drive do
 - Pasta do Drive: `1OOkdotxiwf_j00SGuG0ynhxCRqHQW32o`
 - Planilha: `1wQ9ZJFRSN4LObgyWpxXQX3hNP-5thKoGCJDWenuBxMM`
 - Aba do feed: `gid=1605139045`
-- Intervalo: 5 minutos
+- Intervalo: 1 hora
 
 O CSV do export possui `url` em todos os registros, enquanto `thumbnail_url` pode estar vazio. O script usa `thumbnail_url` quando disponível e utiliza `url` como fallback.
 
