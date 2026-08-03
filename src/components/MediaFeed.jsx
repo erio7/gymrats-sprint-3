@@ -59,7 +59,7 @@ export function MediaFeed({ feedData }) {
   return (
     <div className="hidden md:block relative z-10 border-b border-[#E9E5F0] bg-white/65 py-2.5 overflow-hidden">
       <div
-        className={`flex w-max gap-3 will-change-transform [backface-visibility:hidden] ${withTransition ? 'transition-transform duration-[950ms] ease-[cubic-bezier(0.16,1,0.3,1)]' : ''}`}
+        className={`flex w-max gap-3 will-change-transform [backface-visibility:hidden] ${withTransition ? 'transition-transform duration-[1400ms] ease-[cubic-bezier(0.65,0,0.35,1)]' : ''}`}
         style={{ transform: `translate3d(-${currentIndex * ITEM_STEP_PX}px, 0, 0)` }}
         onTransitionEnd={handleTransitionEnd}
       >
