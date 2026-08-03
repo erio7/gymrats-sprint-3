@@ -25,7 +25,8 @@ As regras de modalidade, duração e validade são tratadas antes da consolidaç
 - **Detalhes do competidor:** tooltip com semanas, desafios, extras e total.
 - **Tendência semanal:** compara a pontuação da última semana preenchida com a semana anterior; não representa mudança de posição no ranking.
 - **Feed de mídia:** carrossel contínuo, controles laterais e janela semanal com até 24 fotos recentes.
-- **Atualização automática:** ranking e feed são consultados novamente a cada 2 minutos.
+- **Quilômetros percorridos:** soma da coluna `distance_miles` da aba `Dataset`, já fornecida em quilômetros.
+- **Atualização automática:** ranking, feed e Dataset são consultados novamente a cada 2 minutos.
 - **Layout responsivo:** tema claro da TD Business para desktop, tablet e celular.
 - **Contagem regressiva:** acompanha os 45 dias da Sprint 3.
 
@@ -41,7 +42,7 @@ TOTAL = CHECKIN
       + PTS EXTRAS
 ```
 
-`CHECKIN` já corresponde à soma dos dias ativos das sete semanas. As colunas `SEMANA 1` a `SEMANA 7` são usadas como detalhamento e não são somadas novamente. O KPI de quilômetros permanece visível com `-`, pois a nova fonte não fornece `KM`.
+`CHECKIN` já corresponde à soma dos dias ativos das sete semanas. As colunas `SEMANA 1` a `SEMANA 7` são usadas como detalhamento e não são somadas novamente. O KPI de quilômetros soma diretamente `distance_miles`; apesar do nome original, essa coluna já chega convertida e não recebe um novo fator de conversão.
 
 ## Fontes de dados
 
@@ -61,6 +62,16 @@ PTS EXTRAS
 CHECKIN
 DATA
 ```
+
+### Dataset
+
+Cabeçalho usado para o KPI de distância:
+
+```text
+distance_miles
+```
+
+Valores vazios ou inválidos são ignorados. Uma falha nessa fonte mantém o KPI como `-` sem impedir o carregamento do restante do dashboard.
 
 ### Feed
 
@@ -147,6 +158,7 @@ As URLs públicas já possuem valores padrão em [`src/config.js`](src/config.js
 ```env
 VITE_RANKING_CSV_URL=https://docs.google.com/spreadsheets/.../pub?output=csv
 VITE_FEED_CSV_URL=https://docs.google.com/spreadsheets/.../pub?gid=...&single=true&output=csv
+VITE_DATASET_CSV_URL=https://docs.google.com/spreadsheets/.../pub?gid=...&single=true&output=csv
 VITE_REFRESH_INTERVAL_MS=120000
 ```
 

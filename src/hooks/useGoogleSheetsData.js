@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { parseCsvToJson, validateColumns } from '../lib/csv';
+import { sumDistanceKm } from '../lib/distance';
 import { selectWeeklyMedia } from '../lib/media';
 
 const REQUIRED_RANKING_COLUMNS = [
@@ -13,10 +14,12 @@ const REQUIRED_RANKING_COLUMNS = [
   'DATA',
 ];
 const REQUIRED_FEED_COLUMNS = []; // feed aceita 'url' OU 'thumbnail_url'
+const REQUIRED_DATASET_COLUMNS = ['distance_miles'];
 
-export function useGoogleSheetsData({ rankingUrl, feedUrl, refreshIntervalMs }) {
+export function useGoogleSheetsData({ rankingUrl, feedUrl, datasetUrl, refreshIntervalMs }) {
   const [data, setData] = useState([]);
   const [feedData, setFeedData] = useState([]);
+  const [totalKm, setTotalKm] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -51,8 +54,20 @@ export function useGoogleSheetsData({ rankingUrl, feedUrl, refreshIntervalMs }) 
           if (err.name !== 'AbortError') console.warn("Erro ao carregar feed:", err);
         });
 
+      const fetchDataset = fetch(`${datasetUrl}&_t=${ts}`, fetchOpts)
+        .then(r => { if (!r.ok) throw new Error("Erro Dataset"); return r.text(); })
+        .then(text => {
+          const { data: jsonData, headers } = parseCsvToJson(text);
+          const missing = validateColumns(headers, REQUIRED_DATASET_COLUMNS, 'Dataset CSV');
+          if (missing.length) throw new Error("Dataset sem distance_miles");
+          if (!cancelled) setTotalKm(sumDistanceKm(jsonData));
+        })
+        .catch(err => {
+          if (err.name !== 'AbortError') console.warn("Erro ao carregar distancias:", err);
+        });
+
       try {
-        await Promise.all([fetchRanking, fetchFeed]);
+        await Promise.all([fetchRanking, fetchFeed, fetchDataset]);
         if (!cancelled && isInitial) setLoading(false);
       } catch (err) {
         if (err.name === 'AbortError' || cancelled) return;
@@ -73,7 +88,7 @@ export function useGoogleSheetsData({ rankingUrl, feedUrl, refreshIntervalMs }) 
       controller.abort();
       clearInterval(intervalId);
     };
-  }, [rankingUrl, feedUrl, refreshIntervalMs]);
+  }, [rankingUrl, feedUrl, datasetUrl, refreshIntervalMs]);
 
-  return { data, feedData, loading, error };
+  return { data, feedData, totalKm, loading, error };
 }
