@@ -32,8 +32,22 @@ export function GroupedOverviewPanel({ rankingData }) {
   const leaderGroup = scoreGroups[0];
   const leaderPoints = leaderGroup?.points || 0;
   const secondGroup = scoreGroups[1];
+  const leaderCount = leaderGroup?.members.length || 0;
+  const sharedLead = leaderCount > 1;
   const onePointRace = rankingData.filter(member => leaderPoints - member.points <= 1).length;
   const biggestTie = scoreGroups.reduce((largest, group) => group.members.length > largest.members.length ? group : largest, leaderGroup);
+  const featuredHasTie = featuredGroups.some(group => group.members.length > 1);
+  const allTogether = scoreGroups.length === 1;
+  const gapToSecond = secondGroup ? leaderPoints - secondGroup.points : null;
+  const narrative = getRaceNarrative({ rankingData, leaderGroup, secondGroup, onePointRace, gapToSecond });
+  const viewTitle = featuredHasTie ? 'Pelotões da Sprint' : 'Corrida da Sprint';
+  const viewDescription = allTogether
+    ? rankingData.length === 1
+      ? 'O primeiro competidor já inaugurou o ranking.'
+      : `Todos os ${rankingData.length} competidores estão na mesma faixa de pontuação.`
+    : featuredHasTie
+      ? 'Quem tem a mesma pontuação aparece junto na mesma faixa.'
+      : 'As maiores pontuações aparecem em destaque, sem empates no momento.';
   const gridColumns = featuredGroups.length === 1 ? 'lg:grid-cols-1' : featuredGroups.length === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-3';
 
   return <div className="w-full max-w-[1500px] mx-auto space-y-4">
@@ -47,14 +61,14 @@ export function GroupedOverviewPanel({ rankingData }) {
             <Layers3 className="w-4 h-4" />
             <p className="text-[10px] uppercase tracking-[0.24em] font-black">Ranking agrupado</p>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-[#17131F] tracking-tight mt-1">Pelotões da Sprint</h2>
-          <p className="text-sm text-[#746B80] mt-1">Quem tem a mesma pontuação aparece junto na mesma faixa.</p>
+          <h2 className="text-2xl sm:text-3xl font-black text-[#17131F] tracking-tight mt-1">{viewTitle}</h2>
+          <p className="text-sm text-[#746B80] mt-1">{viewDescription}</p>
         </div>
 
         <div className="grid grid-cols-3 gap-2 sm:gap-3">
           <SummaryMetric value={leaderPoints} label="Pontos na liderança" />
-          <SummaryMetric value={leaderGroup?.members.length || 0} label="Líderes empatados" />
-          <SummaryMetric value={onePointRace} label="A até 1 ponto" />
+          <SummaryMetric value={leaderCount} label={sharedLead ? 'Líderes empatados' : 'Na liderança'} />
+          <SummaryMetric value={onePointRace} label="Até 1 pt do topo" />
         </div>
       </div>
 
@@ -102,11 +116,11 @@ export function GroupedOverviewPanel({ rankingData }) {
         <div className="relative">
           <span className="w-9 h-9 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center"><Sparkles className="w-4 h-4 text-accent" /></span>
           <p className="text-[10px] uppercase tracking-[0.2em] font-black text-accent mt-5">Leitura rápida</p>
-          <h3 className="text-xl font-black mt-1 leading-tight">A disputa começou embolada.</h3>
-          <p className="text-sm text-white/65 mt-2 leading-relaxed">{onePointRace} competidores estão a no máximo um ponto do topo. Cada check-in ainda muda bastante o desenho do ranking.</p>
+          <h3 className="text-xl font-black mt-1 leading-tight">{narrative.title}</h3>
+          <p className="text-sm text-white/65 mt-2 leading-relaxed">{narrative.description}</p>
           <div className="grid grid-cols-2 gap-2 mt-5">
-            <QuickFact value={biggestTie?.members.length || 0} label="Maior empate" />
-            <QuickFact value={secondGroup ? leaderPoints - secondGroup.points : 0} label="Gap do 1º pelotão" suffix="pt" />
+            <QuickFact value={biggestTie?.members.length || 0} label="Maior pelotão" />
+            <QuickFact value={gapToSecond ?? '—'} label={secondGroup ? (sharedLead ? 'Vantagem do topo' : 'Vantagem do líder') : 'Sem perseguidor'} suffix={secondGroup ? (gapToSecond === 1 ? 'pt' : 'pts') : ''} />
           </div>
         </div>
       </aside>
@@ -123,6 +137,7 @@ function SummaryMetric({ value, label }) {
 
 function ScoreGroupCard({ group, index }) {
   const isLeader = index === 0;
+  const sharedLead = isLeader && group.members.length > 1;
   const style = GROUP_STYLES[index] || FALLBACK_STYLE;
   const visibleLimit = isLeader ? 8 : 6;
   const visibleMembers = group.members.slice(0, visibleLimit);
@@ -134,7 +149,7 @@ function ScoreGroupCard({ group, index }) {
       <div>
         <div className="flex items-center gap-2">
           <span className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-black" style={{ background: isLeader ? 'rgba(255,255,255,.12)' : style.soft, color: isLeader ? '#FFD34E' : style.accent }}>{isLeader ? <Crown className="w-4 h-4" /> : `${group.rank}º`}</span>
-          <div><p className={`text-[9px] uppercase tracking-[0.18em] font-black ${isLeader ? 'text-accent' : 'text-[#81778D]'}`}>{isLeader ? 'Liderança compartilhada' : `${group.rank}º lugar`}</p><p className={`text-xs font-bold mt-0.5 ${isLeader ? 'text-white/65' : 'text-[#746B80]'}`}>{group.members.length} {group.members.length === 1 ? 'competidor' : 'competidores empatados'}</p></div>
+          <div><p className={`text-[9px] uppercase tracking-[0.18em] font-black ${isLeader ? 'text-accent' : 'text-[#81778D]'}`}>{isLeader ? (sharedLead ? 'Liderança compartilhada' : 'Líder atual') : `${group.rank}º lugar`}</p><p className={`text-xs font-bold mt-0.5 ${isLeader ? 'text-white/65' : 'text-[#746B80]'}`}>{group.members.length} {group.members.length === 1 ? 'competidor' : 'competidores empatados'}</p></div>
         </div>
       </div>
       <div className="text-right shrink-0"><strong className={`text-4xl font-black tracking-tight ${isLeader ? 'text-white' : 'text-[#17131F]'}`}>{group.points}</strong><span className="block text-[8px] font-black uppercase tracking-[0.18em]" style={{ color: isLeader ? '#00FFB6' : style.accent }}>pontos</span></div>
@@ -163,6 +178,67 @@ function QuickFact({ value, label, suffix = '' }) {
     <div className="flex items-baseline gap-1"><strong className="text-xl font-black">{value}</strong>{suffix && <span className="text-[9px] uppercase font-black text-accent">{suffix}</span>}</div>
     <span className="block text-[8px] uppercase tracking-wider text-white/50 font-bold mt-1">{label}</span>
   </div>;
+}
+
+function getRaceNarrative({ rankingData, leaderGroup, secondGroup, onePointRace, gapToSecond }) {
+  const total = rankingData.length;
+  const leaderCount = leaderGroup.members.length;
+  const sharedLead = leaderCount > 1;
+  const closeChasers = Math.max(0, onePointRace - leaderCount);
+
+  if (total === 1) {
+    return {
+      title: 'A Sprint começou agora.',
+      description: 'O primeiro competidor já abriu o ranking. Os próximos check-ins vão começar a desenhar a disputa.',
+    };
+  }
+
+  if (!secondGroup) {
+    return {
+      title: 'Todo mundo lado a lado.',
+      description: `Os ${total} competidores têm a mesma pontuação. O próximo check-in pode reorganizar todo o ranking.`,
+    };
+  }
+
+  if (sharedLead && gapToSecond <= 1) {
+    const chaserText = closeChasers
+      ? ` e mais ${closeChasers} ${closeChasers === 1 ? 'está' : 'estão'} a apenas um ponto`
+      : '';
+    return {
+      title: 'O topo está compartilhado.',
+      description: `${leaderCount} competidores dividem a liderança${chaserText}. Qualquer check-in pode mudar o primeiro pelotão.`,
+    };
+  }
+
+  if (sharedLead) {
+    return {
+      title: 'Um pelotão abriu vantagem.',
+      description: `${leaderCount} competidores dividem o topo e estão ${formatPoints(gapToSecond)} à frente do grupo seguinte.`,
+    };
+  }
+
+  if (gapToSecond <= 1) {
+    return {
+      title: 'Tem líder, mas não tem folga.',
+      description: `${secondGroup.members.length} ${secondGroup.members.length === 1 ? 'competidor está' : 'competidores estão'} a apenas um ponto da liderança. Um check-in pode virar o ranking.`,
+    };
+  }
+
+  if (gapToSecond <= 3) {
+    return {
+      title: 'A liderança começou a se desenhar.',
+      description: `O líder tem ${formatPoints(gapToSecond)} de vantagem, mas o grupo seguinte ainda consegue encostar rapidamente.`,
+    };
+  }
+
+  return {
+    title: 'O líder abriu vantagem.',
+    description: `A diferença para o próximo grupo chegou a ${formatPoints(gapToSecond)}. A disputa agora é para reduzir essa distância.`,
+  };
+}
+
+function formatPoints(value) {
+  return `${value} ${value === 1 ? 'ponto' : 'pontos'}`;
 }
 
 function Trend({ trend }) {
