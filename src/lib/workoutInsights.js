@@ -43,6 +43,7 @@ const ACTIVITY_NAMES = {
   functional_strength_training: 'treino funcional',
   hiit: 'HIIT',
   running: 'corrida',
+  strength_training: 'musculação',
   swimming: 'natação',
   walking: 'caminhada',
   weight_training: 'musculação',
