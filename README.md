@@ -26,6 +26,8 @@ As regras de modalidade, duração e validade são tratadas antes da consolidaç
 - **Tendência semanal:** compara a pontuação da última semana preenchida com a semana anterior; não representa mudança de posição no ranking.
 - **Feed de mídia:** carrossel contínuo, controles laterais e janela semanal com até 24 fotos recentes.
 - **Quilômetros percorridos:** soma da coluna `distance_miles` da aba `Dataset`, já fornecida em quilômetros.
+- **Calendário da Sprint:** percurso visual dos 45 dias, organizado em semanas de sábado a sexta-feira.
+- **Curiosidades de treino:** destaques individuais rotativos de duração, distância, calorias e horários calculados a partir dos treinos válidos do `Dataset`.
 - **Atualização automática:** ranking, feed e Dataset são consultados novamente a cada 2 minutos.
 - **Layout responsivo:** tema claro da TD Business para desktop, tablet e celular.
 - **Contagem regressiva:** acompanha os 45 dias da Sprint 3.

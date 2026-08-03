@@ -19,6 +19,7 @@ const REQUIRED_DATASET_COLUMNS = ['distance_miles'];
 export function useGoogleSheetsData({ rankingUrl, feedUrl, datasetUrl, refreshIntervalMs }) {
   const [data, setData] = useState([]);
   const [feedData, setFeedData] = useState([]);
+  const [datasetData, setDatasetData] = useState([]);
   const [totalKm, setTotalKm] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -60,7 +61,10 @@ export function useGoogleSheetsData({ rankingUrl, feedUrl, datasetUrl, refreshIn
           const { data: jsonData, headers } = parseCsvToJson(text);
           const missing = validateColumns(headers, REQUIRED_DATASET_COLUMNS, 'Dataset CSV');
           if (missing.length) throw new Error("Dataset sem distance_miles");
-          if (!cancelled) setTotalKm(sumDistanceKm(jsonData));
+          if (!cancelled) {
+            setDatasetData(jsonData);
+            setTotalKm(sumDistanceKm(jsonData));
+          }
         })
         .catch(err => {
           if (err.name !== 'AbortError') console.warn("Erro ao carregar distancias:", err);
@@ -90,5 +94,5 @@ export function useGoogleSheetsData({ rankingUrl, feedUrl, datasetUrl, refreshIn
     };
   }, [rankingUrl, feedUrl, datasetUrl, refreshIntervalMs]);
 
-  return { data, feedData, totalKm, loading, error };
+  return { data, feedData, datasetData, totalKm, loading, error };
 }
