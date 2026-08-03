@@ -1,51 +1,62 @@
-import { useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MediaItem } from './MediaItem';
 
-const ANIMATION_DURATION_MS = 75_000;
+const AUTOPLAY_INTERVAL_MS = 8_000;
+const ITEM_GAP_PX = 12;
 
 export function MediaFeed({ feedData }) {
-  const containerRef = useRef(null);
   const trackRef = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [interactionVersion, setInteractionVersion] = useState(0);
+
+  const moveCarousel = useCallback((direction) => {
+    const track = trackRef.current;
+    const firstItem = track?.firstElementChild;
+    if (!track || !firstItem) return;
+
+    const loopWidth = track.scrollWidth / 2;
+    const step = firstItem.getBoundingClientRect().width + ITEM_GAP_PX;
+
+    if (direction < 0 && track.scrollLeft <= 1) {
+      track.scrollLeft = loopWidth;
+    } else if (direction > 0 && track.scrollLeft >= loopWidth - 1) {
+      track.scrollLeft -= loopWidth;
+    }
+
+    track.scrollBy({ left: direction * step, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    if (isHovered || !feedData?.length) return undefined;
+    const intervalId = window.setInterval(() => moveCarousel(1), AUTOPLAY_INTERVAL_MS);
+    return () => window.clearInterval(intervalId);
+  }, [feedData, interactionVersion, isHovered, moveCarousel]);
 
   if (!feedData || feedData.length === 0) return null;
 
-  const moveCarousel = (direction) => {
-    const animation = trackRef.current?.getAnimations()[0];
-    const loopWidth = trackRef.current?.scrollWidth / 2;
-    const visibleWidth = containerRef.current?.clientWidth;
-    if (!animation || !loopWidth || !visibleWidth) return;
-
-    const step = Math.min(visibleWidth * 0.7, loopWidth * 0.35);
-    const timeShift = step / loopWidth * ANIMATION_DURATION_MS;
-    const currentTime = Number(animation.currentTime) || 0;
-    animation.currentTime = (currentTime + direction * timeShift + ANIMATION_DURATION_MS) % ANIMATION_DURATION_MS;
+  const handleManualMove = (direction) => {
+    moveCarousel(direction);
+    setInteractionVersion(version => version + 1);
   };
 
   return (
-    <div ref={containerRef} className="media-feed hidden md:block relative z-10 border-b border-[#E9E5F0] bg-white/65 py-2.5 overflow-hidden">
-      <style>{`
-        @keyframes scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-scroll {
-          animation: scroll ${ANIMATION_DURATION_MS}ms linear infinite;
-          will-change: transform;
-        }
-        .media-feed:hover .animate-scroll {
-          animation-play-state: paused;
-        }
-      `}</style>
-
-      <div ref={trackRef} className="flex w-max animate-scroll">
+    <div
+      className="hidden md:block relative z-10 border-b border-[#E9E5F0] bg-white/65 py-2.5 overflow-hidden"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div
+        ref={trackRef}
+        className="flex overflow-x-auto overflow-y-hidden scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {[...feedData, ...feedData].map((url, idx) => (
           <MediaItem key={`${idx}-${url}`} url={url} />
         ))}
       </div>
 
-      <CarouselEdge direction="left" onClick={() => moveCarousel(-1)} />
-      <CarouselEdge direction="right" onClick={() => moveCarousel(1)} />
+      <CarouselEdge direction="left" onClick={() => handleManualMove(-1)} />
+      <CarouselEdge direction="right" onClick={() => handleManualMove(1)} />
     </div>
   );
 }
