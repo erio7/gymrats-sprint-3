@@ -68,14 +68,27 @@ function createMediaSyncTrigger() {
 }
 
 function findLatestZip_() {
-  const files = DriveApp.getFolderById(MEDIA_SYNC_CONFIG.driveFolderId).getFiles();
+  const pendingFolders = [DriveApp.getFolderById(MEDIA_SYNC_CONFIG.driveFolderId)];
+  const visitedFolderIds = new Set();
   let latest = null;
 
-  while (files.hasNext()) {
-    const file = files.next();
-    if (!file.getName().toLowerCase().endsWith('.zip')) continue;
-    if (!latest || file.getLastUpdated().getTime() > latest.getLastUpdated().getTime()) {
-      latest = file;
+  while (pendingFolders.length) {
+    const folder = pendingFolders.pop();
+    if (visitedFolderIds.has(folder.getId())) continue;
+    visitedFolderIds.add(folder.getId());
+
+    const files = folder.getFiles();
+    while (files.hasNext()) {
+      const file = files.next();
+      if (!file.getName().toLowerCase().endsWith('.zip')) continue;
+      if (!latest || file.getLastUpdated().getTime() > latest.getLastUpdated().getTime()) {
+        latest = file;
+      }
+    }
+
+    const subfolders = folder.getFolders();
+    while (subfolders.hasNext()) {
+      pendingFolders.push(subfolders.next());
     }
   }
 

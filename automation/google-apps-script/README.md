@@ -1,6 +1,6 @@
 # Sincronização automática do feed
 
-Esta automação procura o ZIP mais recentemente atualizado na pasta do Drive do projeto, extrai `check_in_media.csv` e adiciona somente URLs inéditas à aba pública usada pelo carrossel.
+Esta automação procura o ZIP mais recentemente atualizado na pasta do Drive do projeto ou em suas subpastas, extrai `check_in_media.csv` e adiciona somente URLs inéditas à aba pública usada pelo carrossel.
 
 ## Configuração usada
 
