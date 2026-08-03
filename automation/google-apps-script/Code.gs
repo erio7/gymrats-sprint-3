@@ -80,7 +80,7 @@ function findLatestZip_() {
     const files = folder.getFiles();
     while (files.hasNext()) {
       const file = files.next();
-      if (!file.getName().toLowerCase().endsWith('.zip')) continue;
+      if (!isZipFile_(file)) continue;
       if (!latest || file.getLastUpdated().getTime() > latest.getLastUpdated().getTime()) {
         latest = file;
       }
@@ -93,6 +93,13 @@ function findLatestZip_() {
   }
 
   return latest;
+}
+
+function isZipFile_(file) {
+  const name = file.getName().toLowerCase();
+  const mimeType = String(file.getMimeType() || '').toLowerCase();
+  return name.endsWith('.zip') || mimeType === 'application/zip' ||
+    mimeType === 'application/x-zip' || mimeType === 'application/x-zip-compressed';
 }
 
 function readMediaUrls_(mediaBlob) {
