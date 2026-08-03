@@ -1,124 +1,165 @@
-# GYM RATS 2026.2
+# Gym Rats — Sprint 3
 
-Dashboard interativo para exibição do ranking de times no desafio fitness interno de 45 dias da **TD Business**.
+Dashboard individual da Sprint 3 do Gym Rats, desafio fitness interno da **TD Business**. A aplicação exibe ranking, evolução semanal, destaques e o feed de atividades a partir de dados publicados no Google Sheets.
 
-## 🏆 Sobre o Projeto
+## Sprint
 
-Desafio corporativo de 45 dias (**15/04/2026 → 29/05/2026**) com colaboradores divididos em 5 equipes acumulando pontos via check-ins, quilometragem e desafios semanais. O dashboard apresenta o ranking ao vivo, consumindo planilha do Google Sheets e exibindo o pódio em telão / desktop / mobile.
+- **Início:** 01/08/2026
+- **Fim:** 14/09/2026
+- **Duração:** 45 dias
+- **Formato:** competição individual
+- **Semana:** sábado a sexta-feira
+- **Dia ativo:** 1 ponto, limitado a 6 dias por semana
+- **Treino válido:** mínimo de 30 minutos e check-in no mesmo dia
 
-### Funcionalidades
+As regras de modalidade, duração e validade são tratadas antes da consolidação da planilha. O dashboard não revalida atividades; ele consome os valores já calculados.
 
-- **Pódio** — 5 posições (4-2-1-3-5 no desktop, sequencial no mobile), com coroa flutuante no 1º lugar
-- **Lista de membros** — ordenada por pontuação, com indicador de tendência (🔼 / 🔽 / —) vs. semana anterior
-- **Tooltip do time** — semanas, desafios e **sparkline** mostrando a evolução semanal
-- **Tooltip do membro** — pontos por semana e extras
-- **Feed de mídia** — carrossel infinito com fotos/vídeos do Instagram (lazy load, IntersectionObserver)
-- **Countdown** — dia atual + tempo restante (DD:HH:MM:SS)
-- **KPIs** — Km percorridos + total de check-ins (números animados)
-- **Auto-refresh** — busca a planilha a cada 2 min sem recarregar a página (com `AbortController`)
-- **Modo TV** (`?tv=1`) — esconde subtítulo e feed para projeção em telão
-- **Reduced motion** — respeita `prefers-reduced-motion: reduce` (desliga auroras, scroll do feed, contadores)
-- **Error Boundary** — captura crashes de runtime e mostra tela amigável de fallback
-- **Schema validation** — avisa no console se colunas críticas (TIME, NOME, CHECK-IN, KM) sumirem da planilha
+## Funcionalidades
 
-## 🚀 Stack
+- **Resumo:** Top 5 em formato de pódio e posições 6 a 10 na seção “Na cola do pódio”.
+- **Ranking completo:** busca por competidor, filtro de pontuação, ordenação e detalhamento por semana e desafio.
+- **Evolução:** pontos consolidados por semana e Top 5 da semana mais recente.
+- **Destaques:** líderes de cada desafio, relâmpago e gincana.
+- **Detalhes do competidor:** tooltip com semanas, desafios, extras e total.
+- **Tendência semanal:** compara a pontuação da última semana preenchida com a semana anterior; não representa mudança de posição no ranking.
+- **Feed de mídia:** carrossel contínuo, controles laterais e exibição somente do lote mais recente de fotos importadas.
+- **Atualização automática:** ranking e feed são consultados novamente a cada 2 minutos.
+- **Layout responsivo:** tema claro da TD Business para desktop, tablet e celular.
+- **Contagem regressiva:** acompanha os 45 dias da Sprint 3.
 
-| Tecnologia | Versão | Uso |
-|---|---|---|
-| [React](https://react.dev/) | ^18.3.1 | UI |
-| [Vite](https://vitejs.dev/) | ^5.4.2 | Build / dev server |
-| [Tailwind CSS](https://tailwindcss.com/) | ^3.4.10 | Estilos |
-| [PapaParse](https://www.papaparse.com/) | ^5.5.3 | Parser CSV |
-| [Lucide React](https://lucide.dev/) | ^0.484.0 | Ícones |
-| Inter (Google Fonts) | — | Tipografia |
+## Pontuação no dashboard
 
-## 📁 Estrutura
+O total individual é calculado assim:
 
+```text
+TOTAL = CHECKIN
+      + DESAFIO 1 ... DESAFIO 5
+      + DESAFIO RELÂMPAGO
+      + GINCANA
+      + PTS EXTRAS
 ```
+
+`CHECKIN` já corresponde à soma dos dias ativos das sete semanas. As colunas `SEMANA 1` a `SEMANA 7` são usadas como detalhamento e não são somadas novamente. O KPI de quilômetros permanece visível com `-`, pois a nova fonte não fornece `KM`.
+
+## Fontes de dados
+
+Os dados são lidos de CSVs públicos do Google Sheets e processados com PapaParse.
+
+### Ranking
+
+Cabeçalhos esperados:
+
+```text
+NOME
+SEMANA 1 ... SEMANA 7
+DESAFIO 1 ... DESAFIO 5
+DESAFIO RELÂMPAGO
+GINCANA
+PTS EXTRAS
+CHECKIN
+DATA
+```
+
+### Feed
+
+Cabeçalhos usados:
+
+```text
+thumbnail_url
+batch_id
+imported_at
+```
+
+O frontend também aceita `url` como fallback. Quando existem registros com `batch_id`, somente o lote mais recente é exibido. Para dados antigos sem lote, são usadas as 15 últimas URLs.
+
+## Automação do feed
+
+O export do Gym Rats é armazenado como ZIP no Google Drive. A automação em [`automation/google-apps-script`](automation/google-apps-script) executa o seguinte fluxo:
+
+```text
+ZIP mais recente no Drive
+        ↓
+check_in_media.csv
+        ↓
+thumbnail_url ou url
+        ↓
+URLs inéditas + batch_id na aba do feed
+        ↓
+Carrossel mostra somente o lote mais recente
+```
+
+O script:
+
+- procura o ZIP mais recente na pasta configurada e em suas subpastas;
+- reconhece ZIP pela extensão ou pelo MIME type do Drive;
+- utiliza `thumbnail_url` e recorre a `url` quando necessário;
+- mantém histórico sem duplicar URLs;
+- identifica cada importação com fotos novas por `batch_id`;
+- registra o ZIP já processado e executa de hora em hora.
+
+Consulte as [instruções de instalação do Apps Script](automation/google-apps-script/README.md). A aba do feed pode permanecer oculta no Google Sheets, mas não deve ser excluída nem removida da publicação.
+
+## Stack
+
+| Tecnologia | Uso |
+|---|---|
+| React 18 | Interface e estado |
+| Vite 5 | Desenvolvimento e build |
+| Tailwind CSS 3 | Estilos e responsividade |
+| PapaParse | Leitura dos CSVs |
+| Lucide React | Ícones |
+| Google Apps Script | Importação incremental do feed |
+
+## Estrutura principal
+
+```text
 src/
-├── App.jsx                 → composição (header + feed + pódio)
-├── main.jsx                → entry point + ErrorBoundary
-├── config.js               → URLs e constantes (env-aware)
-├── index.css               → Tailwind + animações + reduced-motion
-├── tdbusiness_logo.jpg
-│
+├── App.jsx
+├── config.js
 ├── components/
-│   ├── Podium.jsx          → arena 4-2-1-3-5
-│   ├── PodiumTeamCard.jsx  → card de equipe com fonts dinâmicas (ResizeObserver)
+│   ├── OverviewPanel.jsx
+│   ├── IndividualPanel.jsx
+│   ├── InsightsPanel.jsx
 │   ├── MemberTooltip.jsx
-│   ├── TeamTooltip.jsx     → semanas, desafios, sparkline, totais
-│   ├── ChallengeCountdown.jsx
-│   ├── MediaFeed.jsx       → faixa de mídias
-│   ├── MediaItem.jsx       → lazy-load via IntersectionObserver
-│   ├── AnimatedNumber.jsx
-│   ├── StatCard.jsx
-│   ├── Sparkline.jsx       → SVG inline, sem dep externa
-│   └── ErrorBoundary.jsx
-│
+│   ├── MediaFeed.jsx
+│   ├── MediaItem.jsx
+│   └── ChallengeCountdown.jsx
 ├── hooks/
-│   ├── useGoogleSheetsData.js  → fetch + auto-refresh + abort
+│   ├── useGoogleSheetsData.js
 │   └── useCountdown.js
-│
 └── lib/
-    ├── csv.js              → parseCsvToJson (papaparse) + validateColumns
-    └── ranking.js          → computeRanking, trend, currentWeekIdx, weeklySeries
+    ├── csv.js
+    └── ranking.js
+
+automation/google-apps-script/
+├── Code.gs
+├── appsscript.json
+└── README.md
 ```
 
-## ⚙️ Configuração (`.env`)
+## Configuração
 
-Variáveis (todas opcionais — há fallback para URLs do projeto original em [src/config.js](src/config.js)):
+As URLs públicas já possuem valores padrão em [`src/config.js`](src/config.js). Elas podem ser substituídas por variáveis de ambiente:
 
-```
-VITE_RANKING_CSV_URL=https://docs.google.com/spreadsheets/.../pub?gid=...&single=true&output=csv
+```env
+VITE_RANKING_CSV_URL=https://docs.google.com/spreadsheets/.../pub?output=csv
 VITE_FEED_CSV_URL=https://docs.google.com/spreadsheets/.../pub?gid=...&single=true&output=csv
 VITE_REFRESH_INTERVAL_MS=120000
 ```
 
-Veja [.env.example](.env.example).
+Use [`.env.example`](.env.example) como referência. A planilha precisa estar publicada para leitura anônima; apenas compartilhar o link de edição não é suficiente.
 
-## 📊 Dados
-
-Carregados de **Google Sheets** via CSV público (parseados com PapaParse):
-
-| Fonte | Colunas |
-|---|---|
-| **Ranking** | `TIME`, `NOME`, `CHECK-IN`, `KM`, `PTS EXTRAS`, `SEMANA 1`..`SEMANA 6`, `DESAFIO 1 - 100KM`, `DESAFIO 2 - CONVIDADO`, `DESAFIO 3 - TREINO EM EQUIPE`, `DESAFIO 4 - MÃE`, `DESAFIO 5 - EXTRA`, `DESAFIO RELAMPAGO - POSE`, `DATA` |
-| **Feed** | `url` ou `thumbnail_url` |
-
-**Linha de total**: linhas em que `TIME` começa com `TOTAL ` (ex: `TOTAL ROXO`) contêm o check-in oficial e os totais por desafio do time — usadas para o display de pontos e detalhes no tooltip. Demais linhas são membros individuais.
-
-## 🎨 Cores das Equipes
-
-| Equipe | Cor |
-|---|---|
-| AZUL | `#3B82F6` |
-| ROXO | `#8B5CF6` |
-| ROSA | `#EC4899` |
-| VERDE | `#10B981` |
-| LARANJA | `#F97316` |
-
-## 🧮 Pontuação
-
-- Cada **membro** acumula `CHECK-IN` (pontos) + `KM` (separadamente). Pontuação do membro = `CHECK-IN`
-- O **total da equipe** exibido vem da linha `TOTAL <COR>` (já calculada na planilha, inclui semanas + desafios)
-- A **tendência** do membro compara `SEMANA N` vs `SEMANA N-1` (N = última semana com dados no time)
-
-## 🛠️ Comandos
+## Desenvolvimento
 
 ```bash
-npm install            # Instala dependências
-npm run dev            # Inicia servidor Vite (http://localhost:5173)
-npm run build          # Gera build de produção em /dist
-npm run preview        # Preview do build de produção
+npm install
+npm run dev
+npm run build
+npm run preview
 ```
 
-## 🖥️ Modos de uso
+O servidor de desenvolvimento fica disponível em `http://localhost:5173`.
 
-| URL | Comportamento |
-|---|---|
-| `/` | Dashboard normal |
-| `/?tv=1` | Modo TV: sem subtítulo, sem feed, foco no pódio |
+## Licença
 
-## 📄 Licença
-
-Projeto interno — uso corporativo da TD Business.
+Projeto interno da TD Business.
