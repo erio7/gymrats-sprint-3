@@ -35,7 +35,7 @@ export function GroupedOverviewPanel({ rankingData }) {
       : 'As maiores pontuações aparecem em destaque, sem empates no momento.';
   const gridColumns = featuredGroups.length === 1 ? 'lg:grid-cols-1' : featuredGroups.length === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-3';
 
-  return <div className="w-full max-w-[1280px] mx-auto space-y-3">
+  return <div className="w-full max-w-[1500px] mx-auto space-y-3">
     <section className="panel relative overflow-hidden px-4 py-4 sm:px-5 sm:py-5">
       <div className="absolute -top-28 -right-20 w-80 h-80 rounded-full bg-brand-100/70 blur-[90px] pointer-events-none" />
       <div className="absolute -bottom-36 left-1/4 w-72 h-72 rounded-full bg-accent-100/60 blur-[100px] pointer-events-none" />
