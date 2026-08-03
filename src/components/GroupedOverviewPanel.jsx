@@ -42,7 +42,7 @@ export function GroupedOverviewPanel({ rankingData }) {
   const allTogether = scoreGroups.length === 1;
   const gapToSecond = secondGroup ? leaderPoints - secondGroup.points : null;
   const narrative = getRaceNarrative({ rankingData, leaderGroup, secondGroup, onePointRace, gapToSecond });
-  const viewTitle = featuredHasTie ? 'Pelotões da Sprint' : 'Corrida da Sprint';
+  const viewTitle = featuredHasTie ? 'Grupos da Sprint' : 'Corrida da Sprint';
   const viewDescription = allTogether
     ? rankingData.length === 1
       ? 'O primeiro competidor já inaugurou o ranking.'
@@ -115,7 +115,7 @@ export function GroupedOverviewPanel({ rankingData }) {
           <h3 className="text-lg font-black mt-1 leading-tight">{narrative.title}</h3>
           <p className="text-xs text-white/65 mt-2 leading-relaxed">{narrative.description}</p>
           <div className="grid grid-cols-2 gap-2 mt-4">
-            <QuickFact value={biggestTie?.members.length || 0} label="Maior pelotão" />
+            <QuickFact value={biggestTie?.members.length || 0} label="Maior grupo" />
             <QuickFact value={gapToSecond ?? '—'} label={secondGroup ? (sharedLead ? 'Vantagem do topo' : 'Vantagem do líder') : 'Sem perseguidor'} suffix={secondGroup ? (gapToSecond === 1 ? 'pt' : 'pts') : ''} />
           </div>
         </div>
@@ -147,7 +147,7 @@ function ScoreGroupCard({ group, index }) {
     <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-1.5 mt-4">
       {visibleMembers.map(member => <MemberPill key={member.memberKey} member={member} accent={style.accent} inverted={isLeader} />)}
       {hiddenCount > 0 && <GroupMembersTooltip members={group.members} rank={group.rank} points={group.points} accent={style.accent}>
-        <div className={`h-9 flex items-center justify-center rounded-lg border border-dashed text-[9px] font-black uppercase tracking-wider cursor-help transition-colors ${isLeader ? 'border-white/20 bg-white/[0.07] text-white/70 hover:bg-white/[0.13]' : 'border-brand-200 bg-brand-50 text-brand hover:bg-brand-100'}`}>+{hiddenCount} no mesmo pelotão</div>
+        <div className={`h-9 flex items-center justify-center rounded-lg border border-dashed text-[9px] font-black uppercase tracking-wider cursor-help transition-colors ${isLeader ? 'border-white/20 bg-white/[0.07] text-white/70 hover:bg-white/[0.13]' : 'border-brand-200 bg-brand-50 text-brand hover:bg-brand-100'}`}>+{hiddenCount} no mesmo grupo</div>
       </GroupMembersTooltip>}
     </div>
   </article>;
@@ -198,7 +198,7 @@ function GroupMembersTooltip({ members, rank, points, accent, children }) {
           <div className="flex items-center justify-between gap-3 pb-2.5 mb-2.5 border-b border-[#ECE8F1]">
             <div className="flex items-center gap-2 min-w-0">
               <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${accent}16`, color: accent }}><Users className="w-3.5 h-3.5" /></span>
-              <div className="min-w-0"><p className="text-[10px] uppercase tracking-[0.16em] font-black text-[#31293B]">Pelotão do {rank}º lugar</p><p className="text-[9px] text-[#81778D] font-bold mt-0.5">{members.length} competidores empatados</p></div>
+              <div className="min-w-0"><p className="text-[10px] uppercase tracking-[0.16em] font-black text-[#31293B]">Grupo do {rank}º lugar</p><p className="text-[9px] text-[#81778D] font-bold mt-0.5">{members.length} competidores empatados</p></div>
             </div>
             <div className="text-right shrink-0"><strong className="text-lg text-[#17131F]">{points}</strong><span className="text-[8px] ml-1 font-black text-[#91889B]">PTS</span></div>
           </div>
@@ -248,13 +248,13 @@ function getRaceNarrative({ rankingData, leaderGroup, secondGroup, onePointRace,
       : '';
     return {
       title: 'O topo está compartilhado.',
-      description: `${leaderCount} competidores dividem a liderança${chaserText}. Qualquer check-in pode mudar o primeiro pelotão.`,
+      description: `${leaderCount} competidores dividem a liderança${chaserText}. Qualquer check-in pode mudar o primeiro grupo.`,
     };
   }
 
   if (sharedLead) {
     return {
-      title: 'Um pelotão abriu vantagem.',
+      title: 'Um grupo abriu vantagem.',
       description: `${leaderCount} competidores dividem o topo e estão ${formatPoints(gapToSecond)} à frente do grupo seguinte.`,
     };
   }
