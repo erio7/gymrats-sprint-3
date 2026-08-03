@@ -29,54 +29,54 @@ const getWeeks = (item) => Object.fromEntries(
 );
 
 const getChallenges = (item) => ({
-  d1: item['DESAFIO 1 - 100KM'] || '0',
-  d2: item['DESAFIO 2 - CONVIDADO'] || '0',
-  d3: item['DESAFIO 3 - TREINO EM EQUIPE'] || '0',
-  d4: item['DESAFIO 4 - MÃƒE'] || item['DESAFIO 4 - MÃE'] || '0',
-  d5: item['DESAFIO 5 - EXTRA'] || '0',
-  dr: item['DESAFIO RELAMPAGO - POSE'] || '0',
+  d1: item['DESAFIO 1'] || '0',
+  d2: item['DESAFIO 2'] || '0',
+  d3: item['DESAFIO 3'] || '0',
+  d4: item['DESAFIO 4'] || '0',
+  d5: item['DESAFIO 5'] || '0',
+  dr: item['DESAFIO RELÂMPAGO'] || item['DESAFIO RELAMPAGO'] || '0',
   gincana: item.GINCANA || '0',
 });
 
+const sumValues = (values) => values.reduce((sum, value) => sum + parseValue(value), 0);
+
 export const computeRanking = (data) => {
-  if (!data?.length) return { rankingData: [], totalKm: 0, totalMembers: 0, lastUpdate: '' };
+  if (!data?.length) return { rankingData: [], totalKm: null, totalMembers: 0, lastUpdate: '' };
 
   const members = new Map();
-  let totalKm = 0;
   let lastUpdate = '';
 
   data.forEach((item) => {
     const name = item.NOME?.trim();
-    const team = item.TIME?.trim();
     if (item.DATA && !lastUpdate) lastUpdate = item.DATA;
+    if (!name || name.toUpperCase() === 'TOTAL') return;
 
-    // As linhas TOTAL pertencem ao formato anterior por equipes e não participam da Sprint individual.
-    if (!name || name.toUpperCase() === 'TOTAL' || team?.toUpperCase().startsWith('TOTAL ')) return;
-
-    const points = parseValue(item['CHECK-IN']);
-    const km = parseValue(item.KM);
+    const weeks = getWeeks(item);
+    const challenges = getChallenges(item);
+    const checkins = parseValue(item.CHECKIN);
+    const extraPoints = parseValue(item['PTS EXTRAS']);
+    const points = checkins + sumValues(Object.values(challenges)) + extraPoints;
     const memberKey = name.toLowerCase();
     const existing = members.get(memberKey);
 
     if (existing) {
       existing.points += points;
-      existing.km += km;
-      existing.extraPoints = item['PTS EXTRAS'] || existing.extraPoints;
-      existing.weeks = getWeeks(item);
-      existing.challenges = getChallenges(item);
+      existing.checkins += checkins;
+      existing.extraPoints = String(parseValue(existing.extraPoints) + extraPoints);
+      existing.weeks = weeks;
+      existing.challenges = challenges;
     } else {
       members.set(memberKey, {
         memberKey,
         name,
         formattedName: toTitleCase(name),
         points,
-        km,
+        checkins,
         extraPoints: item['PTS EXTRAS'] || '0',
-        weeks: getWeeks(item),
-        challenges: getChallenges(item),
+        weeks,
+        challenges,
       });
     }
-    totalKm += km;
   });
 
   const rankingData = [...members.values()].sort((a, b) => b.points - a.points);
@@ -88,5 +88,5 @@ export const computeRanking = (data) => {
       : index + 1;
   });
 
-  return { rankingData, totalKm: Math.round(totalKm), totalMembers: rankingData.length, lastUpdate };
+  return { rankingData, totalKm: null, totalMembers: rankingData.length, lastUpdate };
 };

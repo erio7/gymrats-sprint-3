@@ -26,9 +26,9 @@ export function MemberTooltip({ member, accentColor, children, style }) {
   ];
   const challenges = member.challenges || {};
   const challengeData = [
-    { label: 'D1 - 100k', value: challenges.d1 }, { label: 'D2 - Conv.', value: challenges.d2 },
-    { label: 'D3 - Equipe', value: challenges.d3 }, { label: 'D4 - Mãe', value: challenges.d4 },
-    { label: 'D5 - Extra', value: challenges.d5 }, { label: 'Relâmpago', value: challenges.dr },
+    { label: 'Desafio 1', value: challenges.d1 }, { label: 'Desafio 2', value: challenges.d2 },
+    { label: 'Desafio 3', value: challenges.d3 }, { label: 'Desafio 4', value: challenges.d4 },
+    { label: 'Desafio 5', value: challenges.d5 }, { label: 'Relâmpago', value: challenges.dr },
     { label: 'Gincana', value: challenges.gincana },
   ];
 

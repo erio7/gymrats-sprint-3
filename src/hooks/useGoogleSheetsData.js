@@ -1,7 +1,16 @@
 import { useState, useEffect } from 'react';
 import { parseCsvToJson, validateColumns } from '../lib/csv';
 
-const REQUIRED_RANKING_COLUMNS = ['TIME', 'NOME', 'CHECK-IN', 'KM'];
+const REQUIRED_RANKING_COLUMNS = [
+  'NOME',
+  ...Array.from({ length: 7 }, (_, index) => `SEMANA ${index + 1}`),
+  ...Array.from({ length: 5 }, (_, index) => `DESAFIO ${index + 1}`),
+  'DESAFIO RELÂMPAGO',
+  'GINCANA',
+  'PTS EXTRAS',
+  'CHECKIN',
+  'DATA',
+];
 const REQUIRED_FEED_COLUMNS = []; // feed aceita 'url' OU 'thumbnail_url'
 
 export function useGoogleSheetsData({ rankingUrl, feedUrl, refreshIntervalMs }) {

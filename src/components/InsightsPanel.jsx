@@ -3,9 +3,9 @@ import { Award, Crown, Flame, TrendingUp, Users } from 'lucide-react';
 
 const WEEK_KEYS = ['s1', 's2', 's3', 's4', 's5', 's6', 's7'];
 const CHALLENGES = [
-  ['d1', 'Desafio 100 km', '#F6C945'], ['d2', 'Desafio convidado', '#60A5FA'],
-  ['d3', 'Desafio em equipe', '#A78BFA'], ['d4', 'Desafio mãe', '#F472B6'],
-  ['d5', 'Desafio extra', '#34D399'], ['dr', 'Relâmpago', '#FB923C'],
+  ['d1', 'Desafio 1', '#F6C945'], ['d2', 'Desafio 2', '#60A5FA'],
+  ['d3', 'Desafio 3', '#A78BFA'], ['d4', 'Desafio 4', '#F472B6'],
+  ['d5', 'Desafio 5', '#34D399'], ['dr', 'Desafio relâmpago', '#FB923C'],
   ['gincana', 'Gincana', '#22D3EE'],
 ];
 const valueOf = value => parseFloat(value?.toString().replace(',', '.')) || 0;
