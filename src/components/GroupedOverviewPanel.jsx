@@ -1,10 +1,7 @@
 import { Crown, Layers3, Minus, TrendingDown, TrendingUp, Users } from 'lucide-react';
-import { CHALLENGE_END, CHALLENGE_START } from '../config';
 import { groupRankingByPoints } from '../lib/ranking';
 import { GroupMembersTooltip } from './GroupMembersTooltip';
 import { MemberTooltip } from './MemberTooltip';
-import { SprintJourney } from './SprintJourney';
-import { WorkoutCuriosityCarousel } from './WorkoutCuriosityCarousel';
 
 const GROUP_STYLES = [
   { accent: '#D89A00', soft: '#FFF7D6', bar: 'linear-gradient(90deg, #F1C232, #D89A00)' },
@@ -14,7 +11,7 @@ const GROUP_STYLES = [
 
 const FALLBACK_STYLE = { accent: '#746B80', soft: '#F4F2F6', bar: 'linear-gradient(90deg, #B5ADBE, #746B80)' };
 
-export function GroupedOverviewPanel({ rankingData, datasetData = [] }) {
+export function GroupedOverviewPanel({ rankingData }) {
   const scoreGroups = groupRankingByPoints(rankingData);
   const featuredGroups = scoreGroups.slice(0, 3);
   const leaderGroup = scoreGroups[0];
@@ -31,12 +28,7 @@ export function GroupedOverviewPanel({ rankingData, datasetData = [] }) {
       : 'As maiores pontuações aparecem em destaque, sem empates no momento.';
   const gridColumns = featuredGroups.length === 1 ? 'lg:grid-cols-1' : featuredGroups.length === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-3';
 
-  return <div className="relative w-full max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-3 items-stretch min-[1700px]:left-1/2 min-[1700px]:w-[calc(100vw-2rem)] min-[1700px]:max-w-[1880px] min-[1700px]:-translate-x-1/2 min-[1700px]:grid-cols-[270px_minmax(0,1fr)_320px]">
-    <aside className="order-2 min-w-0 min-[1700px]:order-1">
-      <WorkoutCuriosityCarousel datasetData={datasetData} />
-    </aside>
-
-    <div className="order-1 min-w-0 space-y-2.5 lg:col-span-2 min-[1700px]:order-2 min-[1700px]:col-span-1">
+  return <div className="w-full max-w-[1500px] mx-auto space-y-2.5">
       <section className="panel relative overflow-hidden px-4 py-3.5 sm:px-4 sm:py-4">
         <div className="absolute -top-28 -right-20 w-80 h-80 rounded-full bg-brand-100/70 blur-[90px] pointer-events-none" />
         <div className="absolute -bottom-36 left-1/4 w-72 h-72 rounded-full bg-accent-100/60 blur-[100px] pointer-events-none" />
@@ -85,11 +77,6 @@ export function GroupedOverviewPanel({ rankingData, datasetData = [] }) {
             })}
           </div>
       </section>
-    </div>
-
-    <aside className="order-3 min-w-0 min-[1700px]:order-3">
-      <SprintJourney startDate={CHALLENGE_START} endDate={CHALLENGE_END} />
-    </aside>
   </div>;
 }
 

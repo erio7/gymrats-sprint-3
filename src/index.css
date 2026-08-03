@@ -31,6 +31,13 @@ body {
   }
 }
 
+/* No desktop amplo, o miolo das abas rola sem deslocar as laterais fixas. */
+@media (min-width: 1700px) {
+  .top-\[60px\] {
+    top: 0 !important;
+  }
+}
+
 
 body {
   margin: 0;
