@@ -57,7 +57,7 @@ export function GroupedOverviewPanel({ rankingData }) {
       <div className="absolute -top-28 -right-20 w-80 h-80 rounded-full bg-brand-100/70 blur-[90px] pointer-events-none" />
       <div className="absolute -bottom-36 left-1/4 w-72 h-72 rounded-full bg-accent-100/60 blur-[100px] pointer-events-none" />
 
-      <div className="relative flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div className="relative">
         <div>
           <div className="flex items-center gap-2 text-brand">
             <Layers3 className="w-4 h-4" />
@@ -65,12 +65,6 @@ export function GroupedOverviewPanel({ rankingData }) {
           </div>
           <h2 className="text-2xl sm:text-3xl font-black text-[#17131F] tracking-tight mt-1">{viewTitle}</h2>
           <p className="text-sm text-[#746B80] mt-1">{viewDescription}</p>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2 sm:gap-3">
-          <SummaryMetric value={leaderPoints} label="Pontos na liderança" />
-          <SummaryMetric value={leaderCount} label={sharedLead ? 'Líderes empatados' : 'Na liderança'} />
-          <SummaryMetric value={onePointRace} label="Até 1 pt do topo" />
         </div>
       </div>
 
@@ -127,13 +121,6 @@ export function GroupedOverviewPanel({ rankingData }) {
         </div>
       </aside>
     </section>
-  </div>;
-}
-
-function SummaryMetric({ value, label }) {
-  return <div className="min-w-0 rounded-xl border border-[#E6E0EC] bg-white/80 backdrop-blur-sm px-2.5 py-2.5 sm:px-4 sm:py-3 shadow-sm">
-    <strong className="block text-lg sm:text-xl font-black text-[#17131F] leading-none">{value}</strong>
-    <span className="block text-[8px] sm:text-[9px] uppercase tracking-wider font-bold text-[#81778D] mt-1.5 leading-tight">{label}</span>
   </div>;
 }
 
