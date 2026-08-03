@@ -2,6 +2,8 @@
 
 Dashboard individual da Sprint 3 do Gym Rats, desafio fitness interno da **TD Business**. A aplicação exibe ranking, evolução semanal, destaques e o feed de atividades a partir de dados publicados no Google Sheets.
 
+**Produção:** [gymrats-sprint-3.vercel.app](https://gymrats-sprint-3.vercel.app)
+
 ## Sprint
 
 - **Início:** 01/08/2026
