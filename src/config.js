@@ -2,7 +2,7 @@ const FALLBACK_RANKING_CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrfQHgBUQ42FNnqaxhuOcXgBaOZK7B5hC9G5PlRq4ovs-IvQoRDEkNYfeFpC3zyZiWYTIub8SzUj2O/pub?output=csv";
 
 const FALLBACK_FEED_CSV_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vR3nqk-0k8VUtIgaR77357dukIvWCBwRs8wY4wIju32ricmg3LIEGyGMlhruMtGBJEE3CeEm8nr6PJO/pub?gid=1279537034&single=true&output=csv";
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrfQHgBUQ42FNnqaxhuOcXgBaOZK7B5hC9G5PlRq4ovs-IvQoRDEkNYfeFpC3zyZiWYTIub8SzUj2O/pub?gid=1605139045&single=true&output=csv";
 
 export const CSV_URL = import.meta.env.VITE_RANKING_CSV_URL || FALLBACK_RANKING_CSV_URL;
 export const FEED_CSV_URL = import.meta.env.VITE_FEED_CSV_URL || FALLBACK_FEED_CSV_URL;
