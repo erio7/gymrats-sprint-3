@@ -75,9 +75,8 @@ export function GroupedOverviewPanel({ rankingData }) {
             return <div key={`${group.rank}-${group.points}`} className="grid grid-cols-[42px_1fr_auto] sm:grid-cols-[52px_1fr_auto] gap-2.5 items-center">
               <span className="text-xs font-black text-[#746B80]">{group.rank}º</span>
               <div className="min-w-0">
-                <div className="flex items-center justify-between gap-3 mb-1.5">
+                <div className="flex items-center gap-3 mb-1.5">
                   <span className="text-xs font-bold text-[#31293B] truncate">{group.members.length} de {rankingData.length} {rankingData.length === 1 ? 'competidor' : 'competidores'}</span>
-                  <span className="text-[10px] font-bold text-[#91889B]">{Math.max(0, leaderPoints - group.points)} atrás</span>
                 </div>
                 <div className="h-2 rounded-full bg-[#EEEAF2] overflow-hidden">
                   <div className="h-full rounded-full transition-[width] duration-700" style={{ width: `${progress}%`, background: style.bar }} />
