@@ -1,18 +1,53 @@
-import { useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 
 export function MemberTooltip({ member, accentColor, children, style }) {
   const [show, setShow] = useState(false);
+  const [pinned, setPinned] = useState(false);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const triggerRef = useRef(null);
 
-  const handleMouseEnter = () => {
+  const showTooltip = () => {
     if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
       setPos({ x: rect.left + rect.width / 2, y: rect.top });
     }
     setShow(true);
   };
+
+  const closeTooltip = () => {
+    setPinned(false);
+    setShow(false);
+  };
+
+  const handleClick = () => {
+    setPinned((wasPinned) => {
+      const nextPinned = !wasPinned;
+      if (nextPinned) showTooltip();
+      else setShow(false);
+      return nextPinned;
+    });
+  };
+
+  useEffect(() => {
+    if (!pinned) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (!triggerRef.current?.contains(event.target)) closeTooltip();
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') closeTooltip();
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('scroll', closeTooltip, true);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('scroll', closeTooltip, true);
+    };
+  }, [pinned]);
 
   const weeks = member.weeks || {};
   const weekData = [
@@ -36,8 +71,9 @@ export function MemberTooltip({ member, accentColor, children, style }) {
     <>
       <div
         ref={triggerRef}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={() => setShow(false)}
+        onMouseEnter={showTooltip}
+        onMouseLeave={() => { if (!pinned) setShow(false); }}
+        onClick={handleClick}
         style={style}
       >
         {children}
