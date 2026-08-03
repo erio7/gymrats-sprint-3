@@ -40,6 +40,21 @@ const getChallenges = (item) => ({
 
 const sumValues = (values) => values.reduce((sum, value) => sum + parseValue(value), 0);
 
+export const groupRankingByPoints = (rankingData) => rankingData.reduce((groups, member) => {
+  const current = groups.at(-1);
+  if (current && current.points === member.points) {
+    current.members.push(member);
+    return groups;
+  }
+
+  groups.push({
+    rank: member.rank,
+    points: member.points,
+    members: [member],
+  });
+  return groups;
+}, []);
+
 export const computeRanking = (data) => {
   if (!data?.length) return { rankingData: [], totalKm: null, totalMembers: 0, lastUpdate: '' };
 
