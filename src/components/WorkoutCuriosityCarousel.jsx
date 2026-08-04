@@ -31,7 +31,7 @@ export function WorkoutCuriosityCarousel({ datasetData }) {
   const FactIcon = fact ? FACT_ICONS[fact.type] || Lightbulb : Lightbulb;
 
   return <article
-    className="relative min-h-[280px] h-full overflow-hidden rounded-2xl bg-gradient-to-br from-[#251044] via-[#40108C] to-brand text-white p-4 sm:p-5 shadow-lg"
+    className="relative min-h-[280px] h-full overflow-hidden rounded-2xl bg-gradient-to-br from-[#251044] via-[#40108C] to-brand text-white p-4 min-[1700px]:p-5 shadow-lg"
     onMouseEnter={() => setPaused(true)}
     onMouseLeave={() => setPaused(false)}
   >
@@ -40,12 +40,12 @@ export function WorkoutCuriosityCarousel({ datasetData }) {
     <span className="absolute -right-3 -bottom-10 text-[150px] font-black leading-none text-white/[0.045] select-none">{activeIndex + 1}</span>
 
     <div className="relative h-full flex flex-col">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3 min-[1280px]:max-[1699px]:flex-col min-[1280px]:max-[1699px]:items-stretch">
         <div className="flex items-center gap-2">
           <span className="w-8 h-8 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center"><Lightbulb className="w-4 h-4 text-accent" /></span>
           <div><p className="text-[9px] uppercase tracking-[0.2em] font-black text-accent">Curiosidades da Sprint</p><p className="text-[10px] text-white/50 font-bold mt-0.5">Treinos individuais válidos</p></div>
         </div>
-        {facts.length > 1 && <div className="flex gap-1">
+        {facts.length > 1 && <div className="flex gap-1 min-[1280px]:max-[1699px]:self-end">
           <CarouselButton label="Curiosidade anterior" onClick={() => move(-1)}><ChevronLeft className="w-3.5 h-3.5" /></CarouselButton>
           <CarouselButton label="Próxima curiosidade" onClick={() => move(1)}><ChevronRight className="w-3.5 h-3.5" /></CarouselButton>
         </div>}
@@ -56,7 +56,7 @@ export function WorkoutCuriosityCarousel({ datasetData }) {
           <FactIcon className="w-4 h-4" />
           <span className="text-[9px] uppercase tracking-[0.18em] font-black">{fact.eyebrow}</span>
         </div>
-        <strong className="text-3xl sm:text-4xl font-black tracking-tight mt-2">{fact.value}</strong>
+        <strong className="text-3xl min-[1700px]:text-4xl font-black tracking-tight mt-2">{fact.value}</strong>
         <h3 className="text-base font-black mt-2">{fact.title}</h3>
         <p className="text-xs leading-relaxed text-white/65 mt-1.5 max-w-sm">{fact.description}</p>
       </div> : <div className="flex-1 flex flex-col justify-center py-6">

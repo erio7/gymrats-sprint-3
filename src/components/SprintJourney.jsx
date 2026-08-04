@@ -27,7 +27,7 @@ export function SprintJourney({ startDate, endDate }) {
     return () => window.clearInterval(intervalId);
   }, []);
 
-  return <article className="panel h-full min-h-[280px] px-4 py-4 sm:px-5 sm:py-5 overflow-hidden">
+  return <article className="panel h-full min-h-[280px] p-4 min-[1700px]:p-5 overflow-hidden">
     <div className="flex items-start justify-between gap-4">
       <div className="flex items-start gap-2.5">
         <span className="w-8 h-8 rounded-lg bg-brand-50 text-brand flex items-center justify-center shrink-0"><CalendarDays className="w-4 h-4" /></span>

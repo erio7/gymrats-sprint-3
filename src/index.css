@@ -31,8 +31,8 @@ body {
   }
 }
 
-/* No desktop amplo, o miolo das abas rola sem deslocar as laterais fixas. */
-@media (min-width: 1700px) {
+/* Em notebooks e desktops, o miolo rola sem deslocar as laterais fixas. */
+@media (min-width: 1280px) {
   .top-\[60px\] {
     top: 0 !important;
   }
