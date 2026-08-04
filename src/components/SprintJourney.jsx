@@ -40,13 +40,13 @@ export function SprintJourney({ startDate, endDate, compact = false }) {
       <div className={`${compact ? 'h-1.5' : 'h-2'} rounded-full bg-[#EEEAF2] overflow-hidden`}><div className="h-full rounded-full bg-gradient-to-r from-brand to-accent transition-[width] duration-700" style={{ width: `${journey.progress}%` }} /></div>
     </div>
 
-    <div className={`journey-grid ${compact ? 'mt-2.5 gap-y-1.5' : 'mt-4 gap-y-1.5'} grid grid-cols-[18px_repeat(7,24px)] justify-center gap-x-0.5 items-center`}>
+    <div className={`journey-grid ${compact ? 'mt-2 gap-y-1' : 'mt-4 gap-y-1.5'} grid grid-cols-[14px_repeat(7,22px)] justify-center gap-x-px items-center`}>
       <span />
       {WEEKDAYS.map((day, index) => <span key={`${day}-${index}`} className="text-center text-[7px] sm:text-[8px] uppercase font-black text-[#91889B]">{day}</span>)}
       {weeks.map((week, weekIndex) => <JourneyWeek key={weekIndex} week={week} weekIndex={weekIndex} totalDays={journey.totalDays} compact={compact} />)}
     </div>
 
-    <div className={`journey-footer border-t border-[#ECE8F1] ${compact ? 'mt-2' : 'mt-4'}`} aria-hidden="true" />
+    <div className={`journey-footer border-t border-[#ECE8F1] ${compact ? 'mt-1.5' : 'mt-4'}`} aria-hidden="true" />
   </article>;
 }
 
@@ -58,10 +58,10 @@ function JourneyWeek({ week, weekIndex, totalDays, compact }) {
       key={day.dateId}
       title={`Dia ${day.sprintDay} · ${formatDate(day.dateId)}`}
       aria-label={`Dia ${day.sprintDay} da Sprint, ${formatDate(day.dateId)}`}
-      className={`journey-day relative ${compact ? 'h-6 text-[8px]' : 'h-6 sm:h-7 text-[8px] sm:text-[9px]'} rounded-md flex items-center justify-center font-black border transition-colors ${day.status === 'today' ? 'bg-brand border-brand text-white shadow-md shadow-brand/20' : day.status === 'complete' ? 'bg-brand-50 border-brand-100 text-brand' : 'bg-[#FAF9FC] border-[#EEEAF2] text-[#AAA2B2]'} ${day.sprintDay === totalDays ? 'ring-1 ring-[#00A97A]/40' : ''}`}
+      className={`journey-day relative ${compact ? 'h-5 text-[8px]' : 'h-6 sm:h-7 text-[8px] sm:text-[9px]'} rounded-md flex items-center justify-center font-black border transition-colors ${day.status === 'today' ? 'bg-brand border-brand text-white shadow-md shadow-brand/20' : day.status === 'complete' ? 'bg-brand-50 border-brand-100 text-brand' : 'bg-[#FAF9FC] border-[#EEEAF2] text-[#AAA2B2]'} ${day.sprintDay === totalDays ? 'ring-1 ring-[#00A97A]/40' : ''}`}
     >
       {day.sprintDay}
-      {day.sprintDay === totalDays && <Flag className="absolute -right-1 -top-1 w-2.5 h-2.5 text-[#00A97A] fill-white" />}
+      {day.sprintDay === totalDays && <Flag className="absolute right-0 top-0 w-2 h-2 text-[#00A97A] fill-white" />}
     </span> : <span key={`empty-${weekIndex}-${index}`} />)}
   </>;
 }

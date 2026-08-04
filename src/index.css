@@ -55,11 +55,11 @@ body {
 @media (min-width: 1280px) and (max-height: 800px) {
   .dashboard-insights {
     gap: 0.5rem;
-    grid-template-rows: minmax(210px, 1.35fr) minmax(145px, 0.85fr);
+    grid-template-rows: minmax(190px, 1.2fr) minmax(160px, 0.8fr);
   }
 
   .sprint-journey-compact {
-    min-height: 210px;
+    min-height: 190px;
     padding: 0.5rem;
   }
 
@@ -73,7 +73,7 @@ body {
   }
 
   .sprint-journey-compact .journey-day {
-    height: 1rem;
+    height: 0.875rem;
     font-size: 0.4375rem;
   }
 
