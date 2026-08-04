@@ -1,4 +1,4 @@
-import { Crown, Minus, TrendingDown, TrendingUp, Trophy, Users } from 'lucide-react';
+import { Crown, Flame, Minus, TrendingDown, TrendingUp, Trophy, Users } from 'lucide-react';
 import { MemberTooltip } from './MemberTooltip';
 
 const DISPLAY_ORDER = [3, 1, 0, 2, 4];
@@ -36,7 +36,7 @@ export function OverviewPanel({ rankingData }) {
     </section>
 
     {nextFive.length > 0 && <section className="panel overflow-hidden sm:flex-1 sm:min-h-[150px] flex flex-col">
-      <div className="px-4 pt-3 pb-2"><p className="text-[10px] uppercase tracking-[0.2em] font-black text-brand">🔥 Na cola do pódio</p><p className="text-xs text-[#746B80] mt-1">Quem está mais perto de entrar no Top 5.</p></div>
+      <div className="px-4 pt-3 pb-2"><div className="flex items-center gap-2 text-brand"><Flame className="w-4 h-4" /><p className="text-[10px] uppercase tracking-[0.2em] font-black">Na cola do pódio</p></div><p className="text-xs text-[#746B80] mt-1">Quem está mais perto de entrar no Top 5.</p></div>
       <div className="grid sm:grid-cols-5 sm:flex-1 divide-y sm:divide-y-0 sm:divide-x divide-[#EDE9F2]">{nextFive.map(member => <ChaserCard key={member.memberKey} member={member} />)}</div>
     </section>}
   </div>;
@@ -69,11 +69,11 @@ function Progress({ value, color, dark = false }) {
 
 function ChaserCard({ member }) {
   const percent = Math.round(Math.min(100, Math.max(0, member.points / 85 * 100)));
-  return <MemberTooltip member={member} accentColor="#742CFF" style={{ height: '100%' }}><div className="h-full min-h-[96px] px-3.5 py-2.5 hover:bg-brand-50/60 transition-colors cursor-help flex flex-col">
-    <div className="flex items-center justify-between"><span className="text-[10px] font-black text-[#8A8194]">{member.rank}º</span><Trend trend={member.trend} compact /></div>
-    <div className="flex items-end justify-between gap-2 mt-1.5"><div className="min-w-0"><p className="text-xs font-bold text-[#241D2D] truncate">{member.formattedName}</p><p className="text-brand font-black mt-0.5">{member.points}<span className="ml-1 text-[8px] text-[#8A8194]">PTS</span></p></div><span className="text-[9px] font-black text-brand shrink-0">{percent}%</span></div>
-    <div className="mt-auto pt-2"><div className="text-[8px] uppercase tracking-wider font-bold text-[#91889B]">Progresso</div><Progress value={percent} color="#742CFF" /></div>
-  </div></MemberTooltip>;
+  return <MemberTooltip member={member} accentColor="#742CFF" style={{ height: '100%' }}><article className="h-full min-h-[116px] px-3.5 py-3 lg:px-4 hover:bg-brand-50/60 transition-colors cursor-help flex flex-col">
+    <div className="flex items-center justify-between"><span className="text-[9px] uppercase tracking-[0.16em] font-black text-brand">{member.rank}º lugar</span><Trend trend={member.trend} /></div>
+    <div className="mt-4 lg:mt-5"><h3 className="text-xs lg:text-sm font-black uppercase leading-tight text-[#17131F] truncate">{member.formattedName}</h3><div className="flex items-baseline mt-1.5"><strong className="text-2xl lg:text-3xl font-black tracking-tight text-[#17131F]">{member.points}</strong><span className="ml-1 lg:ml-1.5 text-[8px] font-black tracking-widest text-brand">PONTOS</span></div></div>
+    <div className="mt-auto pt-2"><div className="flex items-center justify-between text-[8px] uppercase tracking-wider font-bold text-[#91889B]"><span>Progresso</span><span className="text-brand">{percent}%</span></div><Progress value={percent} color="#742CFF" /></div>
+  </article></MemberTooltip>;
 }
 
 function Trend({ trend, compact = false }) {
