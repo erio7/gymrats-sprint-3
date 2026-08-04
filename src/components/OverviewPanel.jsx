@@ -36,7 +36,7 @@ export function OverviewPanel({ rankingData }) {
     </section>
 
     {nextFive.length > 0 && <section className="panel overflow-hidden sm:flex-1 sm:min-h-[150px] flex flex-col">
-      <div className="px-4 pt-3 pb-2"><p className="text-[10px] uppercase tracking-[0.2em] font-black text-brand">Na cola do pódio</p><p className="text-[11px] text-[#81778D] mt-0.5">Quem está mais perto de entrar no Top 5.</p></div>
+      <div className="px-4 pt-3 pb-2"><p className="text-[10px] uppercase tracking-[0.2em] font-black text-brand">🔥 Na cola do pódio</p><p className="text-xs text-[#746B80] mt-1">Quem está mais perto de entrar no Top 5.</p></div>
       <div className="grid sm:grid-cols-5 sm:flex-1 divide-y sm:divide-y-0 sm:divide-x divide-[#EDE9F2]">{nextFive.map(member => <ChaserCard key={member.memberKey} member={member} />)}</div>
     </section>}
   </div>;
