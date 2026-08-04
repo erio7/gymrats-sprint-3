@@ -49,6 +49,7 @@ export function GroupedOverviewPanel({ rankingData }) {
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 text-brand"><Map className="w-4 h-4" /><p className="text-[10px] uppercase tracking-[0.2em] font-black">Mapa da disputa</p></div>
+              <p className="text-xs text-[#746B80] mt-1">Quantidade de competidores em cada faixa de pontuação.</p>
             </div>
             <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-50 text-brand text-[9px] font-black uppercase tracking-wider">
               <Users className="w-3 h-3" /> {rankingData.length} competidores

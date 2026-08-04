@@ -1,62 +1,79 @@
-import { Crown, Minus, TrendingDown, TrendingUp } from 'lucide-react';
+import { Crown, Minus, TrendingDown, TrendingUp, Trophy, Users } from 'lucide-react';
 import { MemberTooltip } from './MemberTooltip';
 
 const DISPLAY_ORDER = [3, 1, 0, 2, 4];
-const CARD_OFFSETS = [48, 22, 0, 22, 48];
-const MEDAL_COLORS = ['#A66B00', '#64748B', '#A85D28'];
+const CARD_OFFSETS = [42, 18, 0, 18, 42];
+const MEDAL_COLORS = ['#C18400', '#64748B', '#A85D28'];
 
 export function OverviewPanel({ rankingData }) {
   const topFive = rankingData.slice(0, 5);
   const nextFive = rankingData.slice(5, 10);
+  const rankCounts = rankingData.reduce((counts, member) => counts.set(member.rank, (counts.get(member.rank) || 0) + 1), new Map());
 
-  return <div className="w-full max-w-[1500px] mx-auto space-y-4">
-    <section className="panel relative px-4 pt-5 sm:px-6 sm:pt-5 overflow-hidden">
-      <div className="absolute left-1/2 top-12 -translate-x-1/2 w-80 h-64 rounded-full bg-brand-100/70 blur-[80px] pointer-events-none" />
-      <div className="relative flex items-start justify-between"><div><p className="text-[10px] uppercase tracking-[0.24em] font-black text-brand">Ranking geral</p><h2 className="text-xl sm:text-2xl font-black text-[#17131F] mt-1">Top 5 da Sprint</h2></div><span className="hidden sm:block text-[10px] uppercase tracking-widest text-[#8A8194] font-bold">85 pontos possíveis</span></div>
+  return <div className="w-full h-full flex flex-col gap-2.5">
+    <section className="panel relative overflow-hidden px-4 pt-4 sm:px-5 sm:pt-4 min-h-[350px] flex-1">
+      <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[34rem] h-72 rounded-full bg-brand-100/75 blur-[90px] pointer-events-none" />
+      <div className="absolute -bottom-40 left-1/3 w-80 h-72 rounded-full bg-accent-100/50 blur-[100px] pointer-events-none" />
 
-      <div className="relative hidden sm:flex min-h-[250px] items-start gap-2 lg:gap-4 px-0 lg:px-2 pb-5 mt-5">
+      <div className="relative flex items-start justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-brand"><Trophy className="w-4 h-4" /><p className="text-[10px] uppercase tracking-[0.24em] font-black">Pódio da Sprint</p></div>
+          <p className="text-xs text-[#746B80] mt-1">Os cinco melhores colocados, preservando empates individuais.</p>
+        </div>
+        <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-brand-100 bg-brand-50 px-2.5 py-1 text-[9px] font-black uppercase tracking-wider text-brand"><Users className="w-3 h-3" /> Top 5 individual</span>
+      </div>
+
+      <div className="relative hidden sm:flex min-h-[230px] items-start gap-2 lg:gap-3 px-0 lg:px-1 pb-4 mt-3">
         {DISPLAY_ORDER.map((index, displayIndex) => {
           const member = topFive[index];
-          return member ? <PodiumCard key={member.memberKey} member={member} offset={CARD_OFFSETS[displayIndex]} /> : <div key={index} className="flex-1" />;
+          return member ? <PodiumCard key={member.memberKey} member={member} offset={CARD_OFFSETS[displayIndex]} tieCount={rankCounts.get(member.rank) || 1} /> : <div key={index} className="flex-1" />;
         })}
       </div>
 
-      <div className="relative sm:hidden grid grid-cols-1 gap-3 mt-5 pb-5">
-        {topFive.map(member => <MobilePodiumCard key={member.memberKey} member={member} />)}
+      <div className="relative sm:hidden grid grid-cols-1 gap-2.5 mt-4 pb-4">
+        {topFive.map((member, index) => <MobilePodiumCard key={member.memberKey} member={member} tieCount={rankCounts.get(member.rank) || 1} featured={index === 0} />)}
       </div>
     </section>
 
-    {nextFive.length > 0 && <section className="panel overflow-hidden"><div className="px-5 pt-4 pb-2"><p className="text-[10px] uppercase tracking-[0.2em] font-black text-[#81778D]">Na cola do pódio</p></div><div className="grid sm:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-[#EDE9F2]">{nextFive.map(member => <MemberTooltip key={member.memberKey} member={member} accentColor="#742CFF"><div className="px-4 py-3 hover:bg-brand-50/60 transition-colors cursor-help"><div className="flex items-center justify-between"><span className="text-xs font-black text-[#8A8194]">{member.rank}º</span><Trend trend={member.trend} /></div><p className="text-sm font-bold text-[#241D2D] truncate mt-2">{member.formattedName}</p><p className="text-brand font-black mt-1">{member.points}<span className="ml-1 text-[9px] text-[#8A8194]">PTS</span></p></div></MemberTooltip>)}</div></section>}
+    {nextFive.length > 0 && <section className="panel overflow-hidden shrink-0">
+      <div className="px-4 pt-3 pb-2"><p className="text-[10px] uppercase tracking-[0.2em] font-black text-brand">Na cola do pódio</p><p className="text-[11px] text-[#81778D] mt-0.5">Quem está mais perto de entrar no Top 5.</p></div>
+      <div className="grid sm:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-[#EDE9F2]">{nextFive.map(member => <MemberTooltip key={member.memberKey} member={member} accentColor="#742CFF"><div className="px-3.5 py-2.5 hover:bg-brand-50/60 transition-colors cursor-help"><div className="flex items-center justify-between"><span className="text-[10px] font-black text-[#8A8194]">{member.rank}º</span><Trend trend={member.trend} compact /></div><p className="text-xs font-bold text-[#241D2D] truncate mt-1.5">{member.formattedName}</p><p className="text-brand font-black mt-0.5">{member.points}<span className="ml-1 text-[8px] text-[#8A8194]">PTS</span></p></div></MemberTooltip>)}</div>
+    </section>}
   </div>;
 }
 
-function PodiumCard({ member, offset }) {
-  const winner = member.rank === 1;
+function PodiumCard({ member, offset, tieCount }) {
+  const featured = offset === 0;
   const medal = MEDAL_COLORS[member.rank - 1] || '#742CFF';
-  const cardHeight = winner ? 192 : member.rank <= 3 ? 184 : 176;
-  const flexSize = winner ? 1.16 : member.rank <= 3 ? 1.04 : 0.92;
+  const cardHeight = featured ? 190 : offset <= 18 ? 178 : 166;
+  const flexSize = featured ? 1.14 : offset <= 18 ? 1.03 : 0.92;
   const percent = Math.round(Math.min(100, Math.max(0, member.points / 85 * 100)));
+  const label = getPositionLabel(member.rank, tieCount);
 
-  return <div className="min-w-0" style={{ marginTop: offset, flex: flexSize, zIndex: winner ? 2 : 1 }}><MemberTooltip member={member} accentColor={medal}><article className="relative rounded-2xl overflow-hidden border px-3 py-3.5 lg:px-4 lg:py-4 flex flex-col cursor-help transition-all duration-200 hover:-translate-y-1" style={{ height: cardHeight, background: winner ? 'linear-gradient(145deg, rgba(246,201,69,.15), #FFFFFF 54%)' : 'linear-gradient(145deg, rgba(116,44,255,.07), #FFFFFF 60%)', borderColor: winner ? 'rgba(215,164,0,.38)' : 'rgba(116,44,255,.14)', boxShadow: winner ? '0 18px 42px rgba(177,132,0,.13)' : '0 12px 28px rgba(69,45,91,.09)' }}>
-    <div className="absolute inset-x-0 top-0 h-0.5" style={{ background: `linear-gradient(90deg, transparent, ${medal}, transparent)` }} />
-    <span className="absolute right-3 -bottom-5 text-7xl lg:text-8xl font-black opacity-[0.06] select-none" style={{ color: medal }}>{member.rank}</span>
-    <div className="relative flex items-start justify-between gap-1.5"><span className="inline-flex items-center gap-1 text-[8px] lg:text-[9px] uppercase tracking-[0.12em] lg:tracking-[0.16em] font-black" style={{ color: medal }}>{winner && <Crown className="w-3 h-3 lg:w-3.5 lg:h-3.5 shrink-0" />}{winner ? 'Líder atual' : `${member.rank}º lugar`}</span><Trend trend={member.trend} /></div>
-    <div className="relative mt-5 lg:mt-6"><h3 className={`font-black text-[#17131F] uppercase leading-tight break-words ${winner ? 'text-xs lg:text-base' : 'text-[11px] lg:text-sm'}`}>{member.formattedName}</h3><div className="flex items-baseline mt-2"><strong className={`${winner ? 'text-3xl lg:text-4xl' : 'text-2xl lg:text-3xl'} font-black text-[#17131F] tracking-tight`}>{member.points}</strong><span className="ml-1 lg:ml-1.5 text-[8px] lg:text-[9px] font-black tracking-widest" style={{ color: medal }}>PONTOS</span></div></div>
-    <div className="relative mt-auto"><div className="flex justify-between items-center text-[8px] lg:text-[9px] uppercase tracking-wider font-bold"><span className="text-[#91889B]">Progresso</span><span style={{ color: medal }}>{percent}%</span></div><Progress value={percent} color={medal} /></div>
+  return <div className="min-w-0" style={{ marginTop: offset, flex: flexSize, zIndex: featured ? 2 : 1 }}><MemberTooltip member={member} accentColor={featured ? '#00FFB6' : medal}><article className={`relative rounded-2xl overflow-hidden border px-3 py-3.5 lg:px-4 flex flex-col cursor-help transition-all duration-200 hover:-translate-y-1 ${featured ? 'border-brand-700 bg-gradient-to-br from-[#251044] via-brand-800 to-brand text-white shadow-xl shadow-brand/25' : 'bg-white/95 shadow-lg'}`} style={{ height: cardHeight, borderColor: featured ? undefined : `${medal}55` }}>
+    <div className="absolute inset-x-0 top-0 h-0.5" style={{ background: `linear-gradient(90deg, transparent, ${featured ? '#00FFB6' : medal}, transparent)` }} />
+    <div className="relative flex items-start justify-between gap-1.5"><span className="inline-flex items-center gap-1 text-[8px] lg:text-[9px] uppercase tracking-[0.12em] lg:tracking-[0.16em] font-black" style={{ color: featured ? '#00FFB6' : medal }}>{member.rank === 1 && <Crown className="w-3 h-3 lg:w-3.5 lg:h-3.5 shrink-0" />}{label}</span><Trend trend={member.trend} /></div>
+    <div className="relative mt-4 lg:mt-5"><h3 className={`font-black uppercase leading-tight break-words ${featured ? 'text-white text-sm lg:text-base' : 'text-[#17131F] text-xs lg:text-sm'}`}>{member.formattedName}</h3><div className="flex items-baseline mt-1.5"><strong className={`${featured ? 'text-3xl lg:text-4xl text-white' : 'text-2xl lg:text-3xl text-[#17131F]'} font-black tracking-tight`}>{member.points}</strong><span className="ml-1 lg:ml-1.5 text-[8px] font-black tracking-widest" style={{ color: featured ? '#00FFB6' : medal }}>PONTOS</span></div></div>
+    <div className="relative mt-auto"><div className={`flex justify-between items-center text-[8px] uppercase tracking-wider font-bold ${featured ? 'text-white/55' : 'text-[#91889B]'}`}><span>Progresso</span><span style={{ color: featured ? '#00FFB6' : medal }}>{percent}%</span></div><Progress value={percent} color={featured ? '#00FFB6' : medal} dark={featured} /></div>
   </article></MemberTooltip></div>;
 }
 
-function Progress({ value, color }) {
-  return <div className="h-1.5 w-full rounded-full bg-[#EEEAF2] mt-2 overflow-hidden"><div className="h-full rounded-full" style={{ width: `${value}%`, background: `linear-gradient(90deg, ${color}90, ${color})` }} /></div>;
+function getPositionLabel(rank, tieCount) {
+  if (rank === 1) return tieCount > 1 ? 'Empate na liderança' : 'Líder atual';
+  return tieCount > 1 ? `Empate no ${rank}º` : `${rank}º lugar`;
 }
 
-function Trend({ trend }) {
-  return trend === 'up' ? <TrendingUp className="w-4 h-4 text-emerald-400 shrink-0" aria-label="Em alta" /> : trend === 'down' ? <TrendingDown className="w-4 h-4 text-rose-400 shrink-0" aria-label="Em queda" /> : trend === 'flat' ? <Minus className="w-4 h-4 text-gray-500 shrink-0" aria-label="Estável" /> : null;
+function Progress({ value, color, dark = false }) {
+  return <div className={`h-1.5 w-full rounded-full mt-1.5 overflow-hidden ${dark ? 'bg-white/15' : 'bg-[#EEEAF2]'}`}><div className="h-full rounded-full" style={{ width: `${value}%`, background: `linear-gradient(90deg, ${color}90, ${color})` }} /></div>;
 }
 
-function MobilePodiumCard({ member }) {
-  const winner = member.rank === 1;
+function Trend({ trend, compact = false }) {
+  const size = compact ? 'w-3 h-3' : 'w-3.5 h-3.5';
+  return trend === 'up' ? <TrendingUp className={`${size} text-emerald-400 shrink-0`} aria-label="Em alta" /> : trend === 'down' ? <TrendingDown className={`${size} text-rose-400 shrink-0`} aria-label="Em queda" /> : trend === 'flat' ? <Minus className={`${size} text-[#91889B] shrink-0`} aria-label="Estável" /> : null;
+}
+
+function MobilePodiumCard({ member, tieCount, featured }) {
   const medal = MEDAL_COLORS[member.rank - 1] || '#742CFF';
   const percent = Math.round(Math.min(100, Math.max(0, member.points / 85 * 100)));
-  return <MemberTooltip member={member} accentColor={medal}><article className="relative h-full min-w-0 rounded-xl border bg-white p-4 shadow-sm" style={{ borderColor: `${medal}55` }}><div className="flex items-start gap-3"><span className="w-9 h-9 shrink-0 rounded-full flex items-center justify-center text-xs font-black" style={{ background: `${medal}18`, color: medal }}>{member.rank}º</span><div className="min-w-0 flex-1"><div className="flex items-center gap-2"><h3 className="font-black text-[#17131F] truncate">{member.formattedName}</h3>{winner && <Crown className="w-4 h-4 shrink-0" style={{ color: medal }} />}</div><div className="flex items-baseline gap-1 mt-1"><strong className="text-2xl text-[#17131F]">{member.points}</strong><span className="text-[9px] font-black" style={{ color: medal }}>PONTOS</span></div></div><Trend trend={member.trend} /></div><div className="mt-3 flex justify-between text-[9px] uppercase font-bold text-[#81778D]"><span>Progresso</span><span style={{ color: medal }}>{percent}%</span></div><Progress value={percent} color={medal} /></article></MemberTooltip>;
+  return <MemberTooltip member={member} accentColor={featured ? '#00FFB6' : medal}><article className={`relative min-w-0 rounded-xl border p-4 shadow-sm ${featured ? 'border-brand-700 bg-gradient-to-br from-[#251044] to-brand text-white' : 'bg-white'}`} style={{ borderColor: featured ? undefined : `${medal}55` }}><div className="flex items-start gap-3"><span className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center text-xs font-black ${featured ? 'bg-white/10' : ''}`} style={{ background: featured ? undefined : `${medal}18`, color: featured ? '#00FFB6' : medal }}>{member.rank}º</span><div className="min-w-0 flex-1"><p className="text-[9px] uppercase tracking-wider font-black" style={{ color: featured ? '#00FFB6' : medal }}>{getPositionLabel(member.rank, tieCount)}</p><h3 className={`font-black truncate mt-1 ${featured ? 'text-white' : 'text-[#17131F]'}`}>{member.formattedName}</h3><div className="flex items-baseline gap-1 mt-1"><strong className="text-2xl">{member.points}</strong><span className="text-[9px] font-black" style={{ color: featured ? '#00FFB6' : medal }}>PONTOS</span></div></div><Trend trend={member.trend} /></div><div className={`mt-3 flex justify-between text-[9px] uppercase font-bold ${featured ? 'text-white/55' : 'text-[#81778D]'}`}><span>Progresso</span><span style={{ color: featured ? '#00FFB6' : medal }}>{percent}%</span></div><Progress value={percent} color={featured ? '#00FFB6' : medal} dark={featured} /></article></MemberTooltip>;
 }

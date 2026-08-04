@@ -13,7 +13,7 @@ import { StatCard } from './components/StatCard';
 import { useGoogleSheetsData } from './hooks/useGoogleSheetsData';
 import { computeRanking } from './lib/ranking';
 
-const NAV_ITEMS = [['overview', LayoutDashboard, 'Resumo'], ['ranking', ClipboardList, 'Ranking completo'], ['podium', Trophy, 'Pódio'], ['evolution', BarChart3, 'Evolução'], ['highlights', Sparkles, 'Destaques']];
+const NAV_ITEMS = [['overview', LayoutDashboard, 'Resumo'], ['podium', Trophy, 'Pódio'], ['ranking', ClipboardList, 'Ranking completo'], ['evolution', BarChart3, 'Evolução'], ['highlights', Sparkles, 'Destaques']];
 
 export default function App() {
   const { data, feedData, datasetData, totalKm, loading, error } = useGoogleSheetsData({ rankingUrl: CSV_URL, feedUrl: FEED_CSV_URL, datasetUrl: DATASET_CSV_URL, refreshIntervalMs: REFRESH_INTERVAL_MS });
