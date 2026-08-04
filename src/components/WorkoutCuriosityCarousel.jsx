@@ -37,8 +37,6 @@ export function WorkoutCuriosityCarousel({ datasetData, compact = false }) {
   >
     <div className="absolute -right-16 -top-16 w-52 h-52 rounded-full bg-brand-300/30 blur-[55px]" />
     <div className="absolute -left-16 -bottom-20 w-48 h-48 rounded-full bg-accent/20 blur-[55px]" />
-    <span className="absolute -right-3 -bottom-10 text-[150px] font-black leading-none text-white/[0.045] select-none">{activeIndex + 1}</span>
-
     <div className="relative h-full flex flex-col">
       <div className="curiosity-header flex items-center justify-between gap-3 min-[1280px]:max-[1699px]:flex-col min-[1280px]:max-[1699px]:items-stretch">
         <div className="flex items-center gap-2">
