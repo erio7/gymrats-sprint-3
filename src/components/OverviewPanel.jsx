@@ -11,7 +11,7 @@ export function OverviewPanel({ rankingData }) {
   const rankCounts = rankingData.reduce((counts, member) => counts.set(member.rank, (counts.get(member.rank) || 0) + 1), new Map());
 
   return <div className="w-full h-full flex flex-col gap-2.5">
-    <section className="panel relative overflow-hidden px-4 pt-4 sm:px-5 sm:pt-4 min-h-[350px] flex-1">
+    <section className="panel relative overflow-hidden px-4 pt-4 sm:px-5 sm:pt-4 sm:h-[312px] sm:min-h-0 sm:flex-none">
       <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[34rem] h-72 rounded-full bg-brand-100/75 blur-[90px] pointer-events-none" />
       <div className="absolute -bottom-40 left-1/3 w-80 h-72 rounded-full bg-accent-100/50 blur-[100px] pointer-events-none" />
 
@@ -23,7 +23,7 @@ export function OverviewPanel({ rankingData }) {
         <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-brand-100 bg-brand-50 px-2.5 py-1 text-[9px] font-black uppercase tracking-wider text-brand"><Users className="w-3 h-3" /> Top 5 individual</span>
       </div>
 
-      <div className="relative hidden sm:flex min-h-[230px] items-start gap-2 lg:gap-3 px-0 lg:px-1 pb-4 mt-3">
+      <div className="relative hidden sm:flex min-h-[215px] items-start gap-2 lg:gap-3 px-0 lg:px-1 pb-3 mt-3">
         {DISPLAY_ORDER.map((index, displayIndex) => {
           const member = topFive[index];
           return member ? <PodiumCard key={member.memberKey} member={member} offset={CARD_OFFSETS[displayIndex]} tieCount={rankCounts.get(member.rank) || 1} /> : <div key={index} className="flex-1" />;
@@ -35,9 +35,9 @@ export function OverviewPanel({ rankingData }) {
       </div>
     </section>
 
-    {nextFive.length > 0 && <section className="panel overflow-hidden shrink-0">
+    {nextFive.length > 0 && <section className="panel overflow-hidden sm:flex-1 sm:min-h-[150px] flex flex-col">
       <div className="px-4 pt-3 pb-2"><p className="text-[10px] uppercase tracking-[0.2em] font-black text-brand">Na cola do pódio</p><p className="text-[11px] text-[#81778D] mt-0.5">Quem está mais perto de entrar no Top 5.</p></div>
-      <div className="grid sm:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-[#EDE9F2]">{nextFive.map(member => <MemberTooltip key={member.memberKey} member={member} accentColor="#742CFF"><div className="px-3.5 py-2.5 hover:bg-brand-50/60 transition-colors cursor-help"><div className="flex items-center justify-between"><span className="text-[10px] font-black text-[#8A8194]">{member.rank}º</span><Trend trend={member.trend} compact /></div><p className="text-xs font-bold text-[#241D2D] truncate mt-1.5">{member.formattedName}</p><p className="text-brand font-black mt-0.5">{member.points}<span className="ml-1 text-[8px] text-[#8A8194]">PTS</span></p></div></MemberTooltip>)}</div>
+      <div className="grid sm:grid-cols-5 sm:flex-1 divide-y sm:divide-y-0 sm:divide-x divide-[#EDE9F2]">{nextFive.map(member => <ChaserCard key={member.memberKey} member={member} />)}</div>
     </section>}
   </div>;
 }
@@ -65,6 +65,15 @@ function getPositionLabel(rank, tieCount) {
 
 function Progress({ value, color, dark = false }) {
   return <div className={`h-1.5 w-full rounded-full mt-1.5 overflow-hidden ${dark ? 'bg-white/15' : 'bg-[#EEEAF2]'}`}><div className="h-full rounded-full" style={{ width: `${value}%`, background: `linear-gradient(90deg, ${color}90, ${color})` }} /></div>;
+}
+
+function ChaserCard({ member }) {
+  const percent = Math.round(Math.min(100, Math.max(0, member.points / 85 * 100)));
+  return <MemberTooltip member={member} accentColor="#742CFF" style={{ height: '100%' }}><div className="h-full min-h-[96px] px-3.5 py-2.5 hover:bg-brand-50/60 transition-colors cursor-help flex flex-col">
+    <div className="flex items-center justify-between"><span className="text-[10px] font-black text-[#8A8194]">{member.rank}º</span><Trend trend={member.trend} compact /></div>
+    <div className="flex items-end justify-between gap-2 mt-1.5"><div className="min-w-0"><p className="text-xs font-bold text-[#241D2D] truncate">{member.formattedName}</p><p className="text-brand font-black mt-0.5">{member.points}<span className="ml-1 text-[8px] text-[#8A8194]">PTS</span></p></div><span className="text-[9px] font-black text-brand shrink-0">{percent}%</span></div>
+    <div className="mt-auto pt-2"><div className="text-[8px] uppercase tracking-wider font-bold text-[#91889B]">Progresso</div><Progress value={percent} color="#742CFF" /></div>
+  </div></MemberTooltip>;
 }
 
 function Trend({ trend, compact = false }) {
