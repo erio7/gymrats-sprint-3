@@ -9,7 +9,7 @@ const FACT_ICONS = {
   time: Clock3,
 };
 
-export function WorkoutCuriosityCarousel({ datasetData }) {
+export function WorkoutCuriosityCarousel({ datasetData, compact = false }) {
   const facts = useMemo(() => getWorkoutCuriosities(datasetData), [datasetData]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -31,7 +31,7 @@ export function WorkoutCuriosityCarousel({ datasetData }) {
   const FactIcon = fact ? FACT_ICONS[fact.type] || Lightbulb : Lightbulb;
 
   return <article
-    className="relative min-h-[280px] h-full overflow-hidden rounded-2xl bg-gradient-to-br from-[#251044] via-[#40108C] to-brand text-white p-4 min-[1700px]:p-5 shadow-lg"
+    className={`relative h-full overflow-hidden rounded-2xl bg-gradient-to-br from-[#251044] via-[#40108C] to-brand text-white shadow-lg ${compact ? 'min-h-[250px] p-4' : 'min-h-[280px] p-4 min-[1700px]:p-5'}`}
     onMouseEnter={() => setPaused(true)}
     onMouseLeave={() => setPaused(false)}
   >
@@ -51,12 +51,12 @@ export function WorkoutCuriosityCarousel({ datasetData }) {
         </div>}
       </div>
 
-      {fact ? <div key={fact.id} className="relative flex-1 flex flex-col justify-center py-5 animate-fade-in" aria-live="polite">
+      {fact ? <div key={fact.id} className={`relative flex-1 flex flex-col justify-center animate-fade-in ${compact ? 'py-3' : 'py-5'}`} aria-live="polite">
         <div className="flex items-center gap-2 text-accent">
           <FactIcon className="w-4 h-4" />
           <span className="text-[9px] uppercase tracking-[0.18em] font-black">{fact.eyebrow}</span>
         </div>
-        <strong className="text-3xl min-[1700px]:text-4xl font-black tracking-tight mt-2">{fact.value}</strong>
+        <strong className={`${compact ? 'text-3xl' : 'text-3xl min-[1700px]:text-4xl'} font-black tracking-tight mt-2`}>{fact.value}</strong>
         <h3 className="text-base font-black mt-2">{fact.title}</h3>
         <p className="text-xs leading-relaxed text-white/65 mt-1.5 max-w-sm">{fact.description}</p>
       </div> : <div className="flex-1 flex flex-col justify-center py-6">

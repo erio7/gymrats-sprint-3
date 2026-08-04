@@ -33,6 +33,19 @@ body {
 
 /* Em notebooks e desktops, o miolo rola sem deslocar as laterais fixas. */
 @media (min-width: 1280px) {
+  .dashboard-shell > header > div,
+  .dashboard-shell > main > div {
+    max-width: none;
+    padding-left: clamp(1rem, 2vw, 2rem);
+    padding-right: clamp(1rem, 2vw, 2rem);
+  }
+
+  .dashboard-main > * {
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   .top-\[60px\] {
     top: 0 !important;
   }
