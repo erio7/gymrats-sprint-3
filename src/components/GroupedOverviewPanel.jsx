@@ -65,8 +65,8 @@ export function GroupedOverviewPanel({ rankingData }) {
                   <div className="flex items-center gap-3 mb-1">
                     <span className="text-xs font-bold text-[#31293B] truncate">{group.members.length} de {rankingData.length} {rankingData.length === 1 ? 'competidor' : 'competidores'}</span>
                   </div>
-                  <div className="h-1.5 rounded-full bg-[#EEEAF2] overflow-hidden">
-                    <div className="h-full rounded-full transition-[width] duration-700" style={{ width: `${progress}%`, background: style.bar }} />
+                  <div className="h-4 rounded-lg bg-[#EEEAF2] overflow-hidden border border-[#E8E3ED] shadow-inner">
+                    <div className="h-full rounded-md transition-[width] duration-700" style={{ width: `${progress}%`, background: style.bar }} />
                   </div>
                 </div>
                 <div className="w-12 text-right"><strong className="text-base text-[#17131F]">{group.points}</strong><span className="text-[8px] ml-1 font-black text-[#91889B]">PTS</span></div>

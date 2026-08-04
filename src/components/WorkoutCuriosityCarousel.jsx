@@ -42,8 +42,8 @@ export function WorkoutCuriosityCarousel({ datasetData, compact = false }) {
     <div className="relative h-full flex flex-col">
       <div className="curiosity-header flex items-center justify-between gap-3 min-[1280px]:max-[1699px]:flex-col min-[1280px]:max-[1699px]:items-stretch">
         <div className="flex items-center gap-2">
-          <span className="curiosity-icon w-8 h-8 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center"><Lightbulb className="w-4 h-4 text-accent" /></span>
-          <div><p className="text-[9px] uppercase tracking-[0.2em] font-black text-accent">Curiosidades da Sprint</p><p className="text-[10px] text-white/50 font-bold mt-0.5">Treinos individuais válidos</p></div>
+          <Lightbulb className="curiosity-icon w-4 h-4 text-accent shrink-0" />
+          <p className="text-[9px] uppercase tracking-[0.2em] font-black text-accent">Curiosidades da Sprint</p>
         </div>
         {facts.length > 1 && <div className="curiosity-controls flex gap-1 min-[1280px]:max-[1699px]:self-end">
           <CarouselButton label="Curiosidade anterior" onClick={() => move(-1)}><ChevronLeft className="w-3.5 h-3.5" /></CarouselButton>
@@ -56,9 +56,9 @@ export function WorkoutCuriosityCarousel({ datasetData, compact = false }) {
           <FactIcon className="w-4 h-4" />
           <span className="text-[9px] uppercase tracking-[0.18em] font-black">{fact.eyebrow}</span>
         </div>
-        <strong className={`curiosity-value ${compact ? 'text-3xl' : 'text-3xl min-[1700px]:text-4xl'} font-black tracking-tight mt-2`}>{fact.value}</strong>
-        <h3 className="curiosity-title text-base font-black mt-2">{fact.title}</h3>
-        <p className="curiosity-description text-xs leading-relaxed text-white/65 mt-1.5 max-w-sm">{fact.description}</p>
+        <strong className={`curiosity-value ${compact ? 'text-2xl' : 'text-3xl'} font-black tracking-tight mt-2`}>{fact.value}</strong>
+        <h3 className={`curiosity-title ${compact ? 'text-sm' : 'text-base'} font-black mt-1.5`}>{fact.title}</h3>
+        <p className={`curiosity-description ${compact ? 'text-[10px] leading-snug' : 'text-xs leading-relaxed'} text-white/65 mt-1 max-w-sm`}>{fact.description}</p>
       </div> : <div className="flex-1 flex flex-col justify-center py-6">
         <p className="text-lg font-black">As curiosidades chegam com os treinos.</p>
         <p className="text-xs text-white/60 mt-2">Quando o Dataset tiver registros válidos, os destaques individuais aparecerão aqui.</p>
