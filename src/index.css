@@ -63,15 +63,6 @@ body {
     padding: 0.5rem;
   }
 
-  .sprint-journey-compact .journey-icon {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-
-  .sprint-journey-compact .journey-title {
-    font-size: 0.75rem;
-  }
-
   .sprint-journey-compact .journey-progress {
     margin-top: 0.25rem;
   }
@@ -88,7 +79,7 @@ body {
 
   .sprint-journey-compact .journey-footer {
     margin-top: 0.25rem;
-    padding-top: 0.25rem;
+    padding-top: 0;
   }
 
   .workout-curiosity-compact {
