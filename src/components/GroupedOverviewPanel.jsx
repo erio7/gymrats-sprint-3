@@ -1,4 +1,4 @@
-import { Crown, Layers3, Minus, TrendingDown, TrendingUp, Users } from 'lucide-react';
+import { Crown, Layers3, Map, Minus, TrendingDown, TrendingUp, Users } from 'lucide-react';
 import { groupRankingByPoints } from '../lib/ranking';
 import { GroupMembersTooltip } from './GroupMembersTooltip';
 import { MemberTooltip } from './MemberTooltip';
@@ -18,7 +18,6 @@ export function GroupedOverviewPanel({ rankingData }) {
   const leaderPoints = leaderGroup?.points || 0;
   const featuredHasTie = featuredGroups.some(group => group.members.length > 1);
   const allTogether = scoreGroups.length === 1;
-  const viewTitle = featuredHasTie ? 'Grupos da Sprint' : 'Corrida da Sprint';
   const viewDescription = allTogether
     ? rankingData.length === 1
       ? 'O primeiro competidor já inaugurou o ranking.'
@@ -38,7 +37,6 @@ export function GroupedOverviewPanel({ rankingData }) {
             <Layers3 className="w-4 h-4" />
             <p className="text-[10px] uppercase tracking-[0.24em] font-black">Ranking agrupado</p>
           </div>
-          <h2 className="text-xl font-black text-[#17131F] tracking-tight mt-0.5">{viewTitle}</h2>
           <p className="text-xs text-[#746B80] mt-1">{viewDescription}</p>
         </div>
 
@@ -50,8 +48,7 @@ export function GroupedOverviewPanel({ rankingData }) {
       <section className="panel px-4 py-3 sm:px-4 min-[1280px]:flex-1 min-[1280px]:flex min-[1280px]:flex-col">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-[10px] uppercase tracking-[0.2em] font-black text-brand">Mapa da disputa</p>
-              <h3 className="text-base font-black text-[#17131F] mt-1">Distribuição da disputa</h3>
+              <div className="flex items-center gap-2 text-brand"><Map className="w-4 h-4" /><p className="text-[10px] uppercase tracking-[0.2em] font-black">Mapa da disputa</p></div>
             </div>
             <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-50 text-brand text-[9px] font-black uppercase tracking-wider">
               <Users className="w-3 h-3" /> {rankingData.length} competidores
@@ -89,7 +86,6 @@ function ScoreGroupCard({ group, index }) {
   const hiddenCount = group.members.length - visibleMembers.length;
 
   return <article className={`relative min-w-0 overflow-hidden rounded-2xl border p-3 sm:p-3.5 transition-transform duration-200 hover:-translate-y-0.5 ${isLeader ? 'border-brand-700 bg-gradient-to-br from-[#251044] via-brand-800 to-brand text-white shadow-xl shadow-brand/20' : 'border-[#E6E0EC] bg-white/90 shadow-md'}`}>
-    <span className={`absolute -right-3 -bottom-9 text-[120px] font-black leading-none select-none ${isLeader ? 'text-white/[0.055]' : 'text-brand/[0.04]'}`}>{group.rank}</span>
     <div className="relative flex items-start justify-between gap-3">
       <div>
         <div className="flex items-center gap-2">

@@ -31,7 +31,7 @@ export function WorkoutCuriosityCarousel({ datasetData, compact = false }) {
   const FactIcon = fact ? FACT_ICONS[fact.type] || Lightbulb : Lightbulb;
 
   return <article
-    className={`relative h-full overflow-hidden rounded-2xl bg-gradient-to-br from-[#251044] via-[#40108C] to-brand text-white shadow-lg ${compact ? 'workout-curiosity-compact min-h-[250px] p-4' : 'min-h-[280px] p-4 min-[1700px]:p-5'}`}
+    className={`relative w-full h-full overflow-hidden rounded-2xl bg-gradient-to-br from-[#251044] via-[#40108C] to-brand text-white shadow-lg ${compact ? 'workout-curiosity-compact min-h-[250px] p-4' : 'min-h-[280px] p-4 min-[1700px]:p-5'}`}
     onMouseEnter={() => setPaused(true)}
     onMouseLeave={() => setPaused(false)}
   >

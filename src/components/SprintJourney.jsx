@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { CalendarDays, Flag } from 'lucide-react';
 import { buildSprintJourney, getSaoPauloDateId } from '../lib/sprintJourney';
 
-const WEEKDAYS = ['Sáb', 'Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex'];
+const WEEKDAYS = ['S', 'D', 'S', 'T', 'Q', 'Q', 'S'];
 
 const toDateId = date => [
   date.getFullYear(),
@@ -26,7 +26,7 @@ export function SprintJourney({ startDate, endDate, compact = false }) {
     return () => window.clearInterval(intervalId);
   }, []);
 
-  return <article className={`panel h-full min-h-[280px] overflow-hidden ${compact ? 'sprint-journey-compact p-3' : 'p-4 min-[1700px]:p-5'}`}>
+  return <article className={`panel w-full h-full min-h-[280px] overflow-hidden ${compact ? 'sprint-journey-compact p-3' : 'p-4 min-[1700px]:p-5'}`}>
     <div className="flex items-center justify-between gap-4">
       <div className="flex items-center gap-2 text-brand">
         <CalendarDays className="w-4 h-4 shrink-0" />
@@ -40,9 +40,9 @@ export function SprintJourney({ startDate, endDate, compact = false }) {
       <div className={`${compact ? 'h-1.5' : 'h-2'} rounded-full bg-[#EEEAF2] overflow-hidden`}><div className="h-full rounded-full bg-gradient-to-r from-brand to-accent transition-[width] duration-700" style={{ width: `${journey.progress}%` }} /></div>
     </div>
 
-    <div className={`journey-grid ${compact ? 'mt-2.5 gap-y-2' : 'mt-4 gap-y-1.5'} grid grid-cols-[26px_repeat(7,minmax(0,1fr))] gap-x-1 items-center`}>
+    <div className={`journey-grid ${compact ? 'mt-2.5 gap-y-1.5' : 'mt-4 gap-y-1.5'} grid grid-cols-[18px_repeat(7,24px)] justify-center gap-x-0.5 items-center`}>
       <span />
-      {WEEKDAYS.map(day => <span key={day} className="text-center text-[7px] sm:text-[8px] uppercase font-black text-[#91889B]">{day}</span>)}
+      {WEEKDAYS.map((day, index) => <span key={`${day}-${index}`} className="text-center text-[7px] sm:text-[8px] uppercase font-black text-[#91889B]">{day}</span>)}
       {weeks.map((week, weekIndex) => <JourneyWeek key={weekIndex} week={week} weekIndex={weekIndex} totalDays={journey.totalDays} compact={compact} />)}
     </div>
 
