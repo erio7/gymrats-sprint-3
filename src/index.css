@@ -51,6 +51,103 @@ body {
   }
 }
 
+/* Mantém os dois cards laterais completos mesmo em notebooks de pouca altura. */
+@media (min-width: 1280px) and (max-height: 800px) {
+  .dashboard-insights {
+    gap: 0.5rem;
+    grid-template-rows: minmax(210px, 1.35fr) minmax(145px, 0.85fr);
+  }
+
+  .sprint-journey-compact {
+    min-height: 210px;
+    padding: 0.5rem;
+  }
+
+  .sprint-journey-compact .journey-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .sprint-journey-compact .journey-title {
+    font-size: 0.75rem;
+  }
+
+  .sprint-journey-compact .journey-progress {
+    margin-top: 0.25rem;
+  }
+
+  .sprint-journey-compact .journey-grid {
+    margin-top: 0.375rem;
+    row-gap: 0.125rem;
+  }
+
+  .sprint-journey-compact .journey-day {
+    height: 1rem;
+    font-size: 0.4375rem;
+  }
+
+  .sprint-journey-compact .journey-footer {
+    margin-top: 0.25rem;
+    padding-top: 0.25rem;
+  }
+
+  .workout-curiosity-compact {
+    min-height: 145px;
+    padding: 0.625rem;
+  }
+
+  .workout-curiosity-compact .curiosity-header {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .workout-curiosity-compact .curiosity-icon,
+  .workout-curiosity-compact .curiosity-controls button {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .workout-curiosity-compact .curiosity-controls {
+    align-self: auto;
+  }
+
+  .workout-curiosity-compact .curiosity-fact {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .workout-curiosity-compact .curiosity-value {
+    margin-top: 0.25rem;
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+  }
+
+  .workout-curiosity-compact .curiosity-title {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .workout-curiosity-compact .curiosity-description {
+    margin-top: 0.125rem;
+    font-size: 0.625rem;
+    line-height: 0.875rem;
+  }
+
+  .workout-curiosity-compact .curiosity-pagination {
+    height: 0.375rem;
+  }
+}
+
+@media (min-width: 1280px) and (max-height: 650px) {
+  .dashboard-shell > main {
+    overflow-y: auto;
+  }
+
+  .dashboard-workspace {
+    min-height: 365px;
+  }
+}
+
 
 body {
   margin: 0;

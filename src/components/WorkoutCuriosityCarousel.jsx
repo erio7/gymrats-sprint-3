@@ -31,7 +31,7 @@ export function WorkoutCuriosityCarousel({ datasetData, compact = false }) {
   const FactIcon = fact ? FACT_ICONS[fact.type] || Lightbulb : Lightbulb;
 
   return <article
-    className={`relative h-full overflow-hidden rounded-2xl bg-gradient-to-br from-[#251044] via-[#40108C] to-brand text-white shadow-lg ${compact ? 'min-h-[250px] p-4' : 'min-h-[280px] p-4 min-[1700px]:p-5'}`}
+    className={`relative h-full overflow-hidden rounded-2xl bg-gradient-to-br from-[#251044] via-[#40108C] to-brand text-white shadow-lg ${compact ? 'workout-curiosity-compact min-h-[250px] p-4' : 'min-h-[280px] p-4 min-[1700px]:p-5'}`}
     onMouseEnter={() => setPaused(true)}
     onMouseLeave={() => setPaused(false)}
   >
@@ -40,31 +40,31 @@ export function WorkoutCuriosityCarousel({ datasetData, compact = false }) {
     <span className="absolute -right-3 -bottom-10 text-[150px] font-black leading-none text-white/[0.045] select-none">{activeIndex + 1}</span>
 
     <div className="relative h-full flex flex-col">
-      <div className="flex items-center justify-between gap-3 min-[1280px]:max-[1699px]:flex-col min-[1280px]:max-[1699px]:items-stretch">
+      <div className="curiosity-header flex items-center justify-between gap-3 min-[1280px]:max-[1699px]:flex-col min-[1280px]:max-[1699px]:items-stretch">
         <div className="flex items-center gap-2">
-          <span className="w-8 h-8 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center"><Lightbulb className="w-4 h-4 text-accent" /></span>
+          <span className="curiosity-icon w-8 h-8 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center"><Lightbulb className="w-4 h-4 text-accent" /></span>
           <div><p className="text-[9px] uppercase tracking-[0.2em] font-black text-accent">Curiosidades da Sprint</p><p className="text-[10px] text-white/50 font-bold mt-0.5">Treinos individuais válidos</p></div>
         </div>
-        {facts.length > 1 && <div className="flex gap-1 min-[1280px]:max-[1699px]:self-end">
+        {facts.length > 1 && <div className="curiosity-controls flex gap-1 min-[1280px]:max-[1699px]:self-end">
           <CarouselButton label="Curiosidade anterior" onClick={() => move(-1)}><ChevronLeft className="w-3.5 h-3.5" /></CarouselButton>
           <CarouselButton label="Próxima curiosidade" onClick={() => move(1)}><ChevronRight className="w-3.5 h-3.5" /></CarouselButton>
         </div>}
       </div>
 
-      {fact ? <div key={fact.id} className={`relative flex-1 flex flex-col justify-center animate-fade-in ${compact ? 'py-3' : 'py-5'}`} aria-live="polite">
+      {fact ? <div key={fact.id} className={`curiosity-fact relative flex-1 flex flex-col justify-center animate-fade-in ${compact ? 'py-3' : 'py-5'}`} aria-live="polite">
         <div className="flex items-center gap-2 text-accent">
           <FactIcon className="w-4 h-4" />
           <span className="text-[9px] uppercase tracking-[0.18em] font-black">{fact.eyebrow}</span>
         </div>
-        <strong className={`${compact ? 'text-3xl' : 'text-3xl min-[1700px]:text-4xl'} font-black tracking-tight mt-2`}>{fact.value}</strong>
-        <h3 className="text-base font-black mt-2">{fact.title}</h3>
-        <p className="text-xs leading-relaxed text-white/65 mt-1.5 max-w-sm">{fact.description}</p>
+        <strong className={`curiosity-value ${compact ? 'text-3xl' : 'text-3xl min-[1700px]:text-4xl'} font-black tracking-tight mt-2`}>{fact.value}</strong>
+        <h3 className="curiosity-title text-base font-black mt-2">{fact.title}</h3>
+        <p className="curiosity-description text-xs leading-relaxed text-white/65 mt-1.5 max-w-sm">{fact.description}</p>
       </div> : <div className="flex-1 flex flex-col justify-center py-6">
         <p className="text-lg font-black">As curiosidades chegam com os treinos.</p>
         <p className="text-xs text-white/60 mt-2">Quando o Dataset tiver registros válidos, os destaques individuais aparecerão aqui.</p>
       </div>}
 
-      {facts.length > 1 && <div className="relative flex items-center gap-1.5" aria-label={`${activeIndex + 1} de ${facts.length}`}>
+      {facts.length > 1 && <div className="curiosity-pagination relative flex items-center gap-1.5" aria-label={`${activeIndex + 1} de ${facts.length}`}>
         {facts.map((item, index) => <button
           key={item.id}
           type="button"
