@@ -69,7 +69,7 @@ export function MediaFeed({ feedData }) {
   const carouselItems = [...feedData, ...feedData, ...feedData];
 
   return (
-    <div className="hidden md:block relative z-10 border-b border-[#E9E5F0] bg-white/65 py-2.5 overflow-hidden">
+    <div className="hidden md:block relative z-30 shrink-0 border-b border-[#E9E5F0] bg-white/65 py-2.5 overflow-hidden">
       <div
         ref={trackRef}
         className="flex w-max gap-3 will-change-transform [backface-visibility:hidden]"

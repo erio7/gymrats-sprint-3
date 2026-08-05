@@ -8,7 +8,7 @@ export function DashboardWorkspace({ children, datasetData = [] }) {
       {children}
     </div>
 
-    <aside className="dashboard-insights order-2 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3 min-[1600px]:sticky min-[1600px]:top-[72px] min-[1600px]:self-start min-[1600px]:grid-cols-1 min-[1600px]:grid-rows-[minmax(280px,auto)_minmax(250px,auto)]">
+    <aside className="dashboard-insights order-2 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-3 min-[1600px]:sticky min-[1600px]:top-0 min-[1600px]:self-start min-[1600px]:grid-cols-1 min-[1600px]:grid-rows-[minmax(280px,auto)_minmax(250px,auto)]">
       <SprintJourney startDate={CHALLENGE_START} endDate={CHALLENGE_END} datasetData={datasetData} compact />
       <WorkoutCuriosityCarousel datasetData={datasetData} compact />
     </aside>
