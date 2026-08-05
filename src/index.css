@@ -51,7 +51,75 @@ body {
   }
 }
 
-/* Mantém os dois cards laterais completos mesmo em notebooks de pouca altura. */
+/* Notebooks: reduz mínimos verticais antes que a lateral seja cortada. */
+@media (min-width: 1280px) and (max-height: 1000px) {
+  .dashboard-insights {
+    gap: 0.625rem;
+    grid-template-rows: minmax(220px, 1.05fr) minmax(185px, 0.95fr);
+  }
+
+  .sprint-journey-compact {
+    min-height: 220px;
+    padding: 0.625rem;
+  }
+
+  .sprint-journey-compact .journey-progress {
+    margin-top: 0.375rem;
+  }
+
+  .sprint-journey-compact .journey-grid {
+    margin-top: 0.5rem;
+    row-gap: 0.1875rem;
+  }
+
+  .sprint-journey-compact .journey-day {
+    height: 1rem;
+    font-size: 0.4375rem;
+  }
+
+  .workout-curiosity-compact {
+    min-height: 185px;
+    padding: 0.75rem;
+  }
+
+  .workout-curiosity-compact .curiosity-header {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .workout-curiosity-compact .curiosity-controls {
+    align-self: auto;
+  }
+
+  .workout-curiosity-compact .curiosity-controls button {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .workout-curiosity-compact .curiosity-fact {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .workout-curiosity-compact .curiosity-value {
+    margin-top: 0.375rem;
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+  }
+
+  .workout-curiosity-compact .curiosity-title {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .workout-curiosity-compact .curiosity-description {
+    margin-top: 0.125rem;
+    font-size: 0.625rem;
+    line-height: 0.875rem;
+  }
+}
+
+/* Telas muito baixas: compactação adicional dos dois cards laterais. */
 @media (min-width: 1280px) and (max-height: 800px) {
   .dashboard-insights {
     gap: 0.5rem;

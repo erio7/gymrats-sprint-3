@@ -3,7 +3,7 @@ import { SprintJourney } from './SprintJourney';
 import { WorkoutCuriosityCarousel } from './WorkoutCuriosityCarousel';
 
 export function DashboardWorkspace({ children, datasetData = [] }) {
-  return <div className="dashboard-workspace w-full grid grid-cols-1 gap-3 items-stretch min-[1280px]:h-full min-[1280px]:grid-cols-[minmax(0,1fr)_clamp(220px,14vw,268px)]">
+  return <div className="dashboard-workspace w-full grid grid-cols-1 gap-3 items-stretch min-[1280px]:h-full min-[1280px]:grid-cols-[minmax(0,1fr)_clamp(260px,18vw,300px)]">
     <div className="dashboard-main order-1 min-w-0 min-[1280px]:min-h-0 min-[1280px]:overflow-y-auto min-[1280px]:overscroll-contain min-[1280px]:scrollbar-thin">
       {children}
     </div>
