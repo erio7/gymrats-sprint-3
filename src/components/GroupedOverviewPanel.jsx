@@ -27,7 +27,7 @@ export function GroupedOverviewPanel({ rankingData }) {
       : 'As maiores pontuações aparecem em destaque, sem empates no momento.';
   const gridColumns = featuredGroups.length === 1 ? 'lg:grid-cols-1' : featuredGroups.length === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-3';
 
-  return <div className="w-full max-w-[1500px] mx-auto space-y-2.5 min-[1280px]:h-full min-[1280px]:flex min-[1280px]:flex-col min-[1280px]:space-y-0 min-[1280px]:gap-2.5">
+  return <div className="w-full max-w-[1500px] mx-auto space-y-2.5">
       <section className="panel relative overflow-hidden px-4 py-3.5 sm:px-4 sm:py-4">
         <div className="absolute -top-28 -right-20 w-80 h-80 rounded-full bg-brand-100/70 blur-[90px] pointer-events-none" />
         <div className="absolute -bottom-36 left-1/4 w-72 h-72 rounded-full bg-accent-100/60 blur-[100px] pointer-events-none" />
@@ -45,7 +45,7 @@ export function GroupedOverviewPanel({ rankingData }) {
         </div>
       </section>
 
-      <section className="panel px-4 py-3 sm:px-4 min-[1280px]:flex-1 min-[1280px]:flex min-[1280px]:flex-col">
+      <section className="panel px-4 py-3 sm:px-4">
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 text-brand"><Map className="w-4 h-4" /><p className="text-[10px] uppercase tracking-[0.2em] font-black">Mapa da disputa</p></div>
@@ -56,7 +56,7 @@ export function GroupedOverviewPanel({ rankingData }) {
             </span>
           </div>
 
-          <div className="space-y-2 mt-3 min-[1280px]:flex-1 min-[1280px]:flex min-[1280px]:flex-col min-[1280px]:justify-evenly min-[1280px]:space-y-0">
+          <div className="space-y-2.5 mt-3">
             {scoreGroups.slice(0, 4).map((group, index) => {
               const style = GROUP_STYLES[index] || FALLBACK_STYLE;
               const progress = rankingData.length ? group.members.length / rankingData.length * 100 : 0;

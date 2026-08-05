@@ -10,8 +10,8 @@ export function OverviewPanel({ rankingData }) {
   const nextFive = rankingData.slice(5, 10);
   const rankCounts = rankingData.reduce((counts, member) => counts.set(member.rank, (counts.get(member.rank) || 0) + 1), new Map());
 
-  return <div className="w-full h-full flex flex-col gap-2.5">
-    <section className="panel relative overflow-hidden px-4 pt-4 sm:px-5 sm:pt-4 sm:h-[312px] sm:min-h-0 sm:flex-none">
+  return <div className="w-full flex flex-col gap-2.5">
+    <section className="panel relative overflow-hidden px-4 pt-4 sm:px-5 sm:pt-4 min-[1100px]:h-[312px] min-[1100px]:min-h-0 min-[1100px]:flex-none">
       <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[34rem] h-72 rounded-full bg-brand-100/75 blur-[90px] pointer-events-none" />
       <div className="absolute -bottom-40 left-1/3 w-80 h-72 rounded-full bg-accent-100/50 blur-[100px] pointer-events-none" />
 
@@ -23,21 +23,21 @@ export function OverviewPanel({ rankingData }) {
         <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-brand-100 bg-brand-50 px-2.5 py-1 text-[9px] font-black uppercase tracking-wider text-brand"><Users className="w-3 h-3" /> Top 5 individual</span>
       </div>
 
-      <div className="relative hidden sm:flex min-h-[215px] items-start gap-2 lg:gap-3 px-0 lg:px-1 pb-3 mt-3">
+      <div className="relative hidden min-[1100px]:flex min-h-[215px] items-start gap-2 lg:gap-3 px-0 lg:px-1 pb-3 mt-3">
         {DISPLAY_ORDER.map((index, displayIndex) => {
           const member = topFive[index];
           return member ? <PodiumCard key={member.memberKey} member={member} offset={CARD_OFFSETS[displayIndex]} tieCount={rankCounts.get(member.rank) || 1} /> : <div key={index} className="flex-1" />;
         })}
       </div>
 
-      <div className="relative sm:hidden grid grid-cols-1 gap-2.5 mt-4 pb-4">
+      <div className="relative min-[1100px]:hidden grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-4 pb-4">
         {topFive.map((member, index) => <MobilePodiumCard key={member.memberKey} member={member} tieCount={rankCounts.get(member.rank) || 1} featured={index === 0} />)}
       </div>
     </section>
 
-    {nextFive.length > 0 && <section className="panel overflow-hidden sm:flex-1 sm:min-h-[150px] flex flex-col">
+    {nextFive.length > 0 && <section className="panel overflow-hidden flex flex-col">
       <div className="px-4 pt-3 pb-2"><div className="flex items-center gap-2 text-brand"><Flame className="w-4 h-4" /><p className="text-[10px] uppercase tracking-[0.2em] font-black">Na cola do pódio</p></div><p className="text-xs text-[#746B80] mt-1">Quem está mais perto de entrar no Top 5.</p></div>
-      <div className="grid sm:grid-cols-5 sm:flex-1 divide-y sm:divide-y-0 sm:divide-x divide-[#EDE9F2]">{nextFive.map(member => <ChaserCard key={member.memberKey} member={member} />)}</div>
+      <div className="grid md:grid-cols-2 min-[1100px]:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-[#EDE9F2]">{nextFive.map(member => <ChaserCard key={member.memberKey} member={member} />)}</div>
     </section>}
   </div>;
 }

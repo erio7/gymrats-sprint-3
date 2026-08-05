@@ -38,12 +38,12 @@ export function WorkoutCuriosityCarousel({ datasetData, compact = false }) {
     <div className="absolute -right-16 -top-16 w-52 h-52 rounded-full bg-brand-300/30 blur-[55px]" />
     <div className="absolute -left-16 -bottom-20 w-48 h-48 rounded-full bg-accent/20 blur-[55px]" />
     <div className="relative h-full flex flex-col">
-      <div className="curiosity-header flex items-center justify-between gap-3 min-[1280px]:max-[1699px]:flex-col min-[1280px]:max-[1699px]:items-stretch">
+      <div className="curiosity-header flex items-center justify-between gap-3 min-[1600px]:max-[1699px]:flex-col min-[1600px]:max-[1699px]:items-stretch">
         <div className="flex items-center gap-2">
           <Lightbulb className="curiosity-icon w-4 h-4 text-accent shrink-0" />
           <p className="text-[9px] uppercase tracking-[0.2em] font-black text-accent">Curiosidades da Sprint</p>
         </div>
-        {facts.length > 1 && <div className="curiosity-controls flex gap-1 min-[1280px]:max-[1699px]:self-end">
+        {facts.length > 1 && <div className="curiosity-controls flex gap-1 min-[1600px]:max-[1699px]:self-end">
           <CarouselButton label="Curiosidade anterior" onClick={() => move(-1)}><ChevronLeft className="w-3.5 h-3.5" /></CarouselButton>
           <CarouselButton label="Próxima curiosidade" onClick={() => move(1)}><ChevronRight className="w-3.5 h-3.5" /></CarouselButton>
         </div>}
