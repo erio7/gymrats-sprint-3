@@ -14,6 +14,7 @@ export function MediaFeed({ feedData }) {
   const trackRef = useRef(null);
   const offsetRef = useRef(0);
   const manualQueueRef = useRef(0);
+  const pausedRef = useRef(false);
   const itemCount = feedData?.length || 0;
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export function MediaFeed({ feedData }) {
     const animate = (now) => {
       const elapsed = Math.min(now - lastFrameTime, 64);
       lastFrameTime = now;
-      let nextOffset = offsetRef.current + elapsed * automaticSpeed;
+      let nextOffset = offsetRef.current + (pausedRef.current ? 0 : elapsed * automaticSpeed);
 
       if (!manualMove && Math.abs(manualQueueRef.current) >= ITEM_STEP_PX) {
         const direction = Math.sign(manualQueueRef.current);
@@ -69,7 +70,11 @@ export function MediaFeed({ feedData }) {
   const carouselItems = [...feedData, ...feedData, ...feedData];
 
   return (
-    <div className="hidden md:block relative z-30 shrink-0 border-b border-[#E9E5F0] bg-white/65 py-2.5 overflow-hidden">
+    <div
+      className="hidden md:block relative z-30 shrink-0 border-b border-[#E9E5F0] bg-white/65 py-2.5 overflow-hidden"
+      onMouseEnter={() => { pausedRef.current = true; }}
+      onMouseLeave={() => { pausedRef.current = false; }}
+    >
       <div
         ref={trackRef}
         className="flex w-max gap-3 will-change-transform [backface-visibility:hidden]"
