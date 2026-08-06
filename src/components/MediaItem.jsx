@@ -1,12 +1,32 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Loader2 } from 'lucide-react';
 
 export function MediaItem({ url }) {
   const [loaded, setLoaded] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(false);
   const [preview, setPreview] = useState(null);
   const itemRef = useRef(null);
   const isVideo = url.match(/\.(mp4|mov|webm)$/i);
+
+  useEffect(() => {
+    const item = itemRef.current;
+    if (!item) return undefined;
+
+    if (!('IntersectionObserver' in window)) {
+      setShouldLoad(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setShouldLoad(true);
+      observer.disconnect();
+    }, { rootMargin: '280px' });
+
+    observer.observe(item);
+    return () => observer.disconnect();
+  }, [url]);
 
   const showPreview = () => {
     if (!itemRef.current || !loaded) return;
@@ -36,19 +56,22 @@ export function MediaItem({ url }) {
 
       {isVideo ? (
         <video
-          src={url}
+          src={shouldLoad ? url : undefined}
           className={`w-full h-full object-cover transition-opacity duration-700 ${loaded ? 'opacity-90 group-hover:opacity-100' : 'opacity-0'}`}
           autoPlay
           muted
           loop
           playsInline
+          preload="metadata"
           onLoadedData={() => setLoaded(true)}
         />
       ) : (
         <img
-          src={url}
+          src={shouldLoad ? url : undefined}
           alt="Atividade compartilhada no Gym Rats"
           className={`w-full h-full object-cover transition-opacity duration-700 ${loaded ? 'opacity-90 group-hover:opacity-100' : 'opacity-0'}`}
+          loading="lazy"
+          decoding="async"
           onLoad={() => setLoaded(true)}
         />
       )}

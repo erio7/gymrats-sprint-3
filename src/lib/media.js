@@ -1,5 +1,5 @@
 const DEFAULT_TIME_ZONE = 'America/Sao_Paulo';
-export const MEDIA_FEED_LIMIT = 24;
+export const MEDIA_FEED_LIMIT = 48;
 
 const formatDateId = (date) => [
   date.getUTCFullYear(),

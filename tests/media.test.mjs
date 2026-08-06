@@ -14,18 +14,18 @@ test('a semana do feed vai de sabado a sexta', () => {
   assert.equal(getMediaWeekId(new Date('2026-08-08T00:01:00-03:00')), '2026-08-08');
 });
 
-test('reune os lotes da semana, prioriza o mais novo e limita a 24 fotos', () => {
-  const monday = Array.from({ length: 10 }, (_, index) => mediaRow(`seg-${index}`, '03/08/2026 09:00:00', 'seg'));
-  const wednesday = Array.from({ length: 10 }, (_, index) => mediaRow(`qua-${index}`, '05/08/2026 09:00:00', 'qua'));
-  const friday = Array.from({ length: 10 }, (_, index) => mediaRow(`sex-${index}`, '07/08/2026 09:00:00', 'sex'));
+test('reune os lotes da semana, prioriza o mais novo e limita as ultimas 48 fotos', () => {
+  const monday = Array.from({ length: 20 }, (_, index) => mediaRow(`seg-${index}`, '03/08/2026 09:00:00', 'seg'));
+  const wednesday = Array.from({ length: 20 }, (_, index) => mediaRow(`qua-${index}`, '05/08/2026 09:00:00', 'qua'));
+  const friday = Array.from({ length: 20 }, (_, index) => mediaRow(`sex-${index}`, '07/08/2026 09:00:00', 'sex'));
   const selected = selectWeeklyMedia([...monday, ...wednesday, ...friday], {
     now: new Date('2026-08-07T12:00:00-03:00'),
   });
 
-  assert.equal(selected.length, 24);
+  assert.equal(selected.length, 48);
   assert.match(selected[0], /sex-0/);
-  assert.match(selected[10], /qua-0/);
-  assert.match(selected[20], /seg-0/);
+  assert.match(selected[20], /qua-0/);
+  assert.match(selected[40], /seg-0/);
 });
 
 test('mantem a semana anterior ate chegar o primeiro lote da nova semana', () => {
